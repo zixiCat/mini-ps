@@ -4,6 +4,7 @@
     "img-edit": "/pages/index/imgEdit",
     "font-edit": "/pages/index/fontEdit",
     "canvas-edit": "/pages/index/canvasEdit",
-    "zx-color": "/pages/index/zxColor"
+    "zx-color": "/pages/index/zxColor",
+    "zx-info": "/pages/index/info"
   }
 }

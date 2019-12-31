@@ -122,7 +122,9 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var fontEdit = function fontEdit() {return __webpack_require__.e(/*! import() | pages/index/fontEdit */ "pages/index/fontEdit").then(__webpack_require__.bind(null, /*! ./fontEdit.vue */ 264));};var imgEdit = function imgEdit() {return __webpack_require__.e(/*! import() | pages/index/imgEdit */ "pages/index/imgEdit").then(__webpack_require__.bind(null, /*! ./imgEdit.vue */ 269));};var canvasEdit = function canvasEdit() {return Promise.all(/*! import() | pages/index/canvasEdit */[__webpack_require__.e("common/vendor"), __webpack_require__.e("pages/index/canvasEdit")]).then(__webpack_require__.bind(null, /*! ./canvasEdit */ 274));};var zxColor = function zxColor() {return __webpack_require__.e(/*! import() | pages/index/zxColor */ "pages/index/zxColor").then(__webpack_require__.bind(null, /*! ./zxColor */ 284));};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var imgEdit = function imgEdit() {return __webpack_require__.e(/*! import() | pages/index/imgEdit */ "pages/index/imgEdit").then(__webpack_require__.bind(null, /*! ./imgEdit.vue */ 264));};var fontEdit = function fontEdit() {return __webpack_require__.e(/*! import() | pages/index/fontEdit */ "pages/index/fontEdit").then(__webpack_require__.bind(null, /*! ./fontEdit.vue */ 269));};var canvasEdit = function canvasEdit() {return Promise.all(/*! import() | pages/index/canvasEdit */[__webpack_require__.e("common/vendor"), __webpack_require__.e("pages/index/canvasEdit")]).then(__webpack_require__.bind(null, /*! ./canvasEdit */ 274));};var zxColor = function zxColor() {return __webpack_require__.e(/*! import() | pages/index/zxColor */ "pages/index/zxColor").then(__webpack_require__.bind(null, /*! ./zxColor */ 284));};var zxInfo = function zxInfo() {return __webpack_require__.e(/*! import() | pages/index/info */ "pages/index/info").then(__webpack_require__.bind(null, /*! ./info */ 291));};var _default =
+
+
 
 
 
@@ -212,7 +214,8 @@ __webpack_require__.r(__webpack_exports__);
     imgEdit: imgEdit,
     fontEdit: fontEdit,
     canvasEdit: canvasEdit,
-    zxColor: zxColor },
+    zxColor: zxColor,
+    zxInfo: zxInfo },
 
   data: function data() {
     return {
@@ -294,22 +297,31 @@ __webpack_require__.r(__webpack_exports__);
     textActive: function textActive(val) {
       if (val > -1) {
         if (this.editType !== 'font') {
-          this.editType = 'font';
           this.imgActive = -1;
+          this.editType = 'font';
         }
         this.fontConfig = this.textList[val].config;
         this.inputContent = this.textList[val].content;
-      } else {
-        this.inputContent = '';
+      } else if (this.imgActive === -1 && this.textActive === -1 && this.editType !== 'canvas') {
+        this.editType = null;
       }
     },
     imgActive: function imgActive(val) {
       if (val > -1) {
         if (this.editType !== 'img') {
-          this.editType = 'img';
           this.textActive = -1;
+          this.editType = 'img';
         }
         this.imgConfig = this.imageList[val].config;
+      } else if (this.imgActive === -1 && this.textActive === -1 && this.editType !== 'canvas') {
+        this.editType = null;
+      }
+    },
+    editType: function editType(val) {
+      if (!val || val === 'canvas') {
+        this.textActive = -1;
+        this.imgActive = -1;
+        this.inputContent = '';
       }
     } },
 
@@ -342,11 +354,14 @@ __webpack_require__.r(__webpack_exports__);
     },
     cancelEditType: function cancelEditType() {
       this.editType = null;
-      this.textActive = -1;
-      this.imgActive = -1;
     },
-    handleOtherType: function handleOtherType() {
-      if (this.editType === 'canvas') {
+    handleImgType: function handleImgType() {
+      if (this.editType !== 'img') {
+        this.editType = null;
+      }
+    },
+    handleFontType: function handleFontType() {
+      if (this.editType !== 'font') {
         this.editType = null;
       }
     },
@@ -356,8 +371,8 @@ __webpack_require__.r(__webpack_exports__);
     },
     getColor: function getColor(e) {
       this.curColor = e;
-      this.$children[1].handleFontColor(e);
-      this.$children[3].handleCanvasColor(e);
+      this.$refs.font.handleFontColor(e);
+      this.$refs.canvas.handleCanvasColor(e);
       this.canvasConfig.color = e;
     },
     //上传图片 upload img
@@ -415,23 +430,10 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     handleCanvasType: function handleCanvasType() {
-      if (this.editType !== 'canvas') {
-        this.editType = 'canvas';
-      } else {
-        this.editType = null;
-      }
+      this.editType = 'canvas';
     },
     info: function info() {
-      uni.showModal({
-        title: '提示',
-        content: '<p>',
-        showCancel: false,
-        success: function success(res) {
-          if (res.confirm) {
-
-          }
-        } });
-
+      this.$refs.info.handldWin();
     },
     close: function close() {
       this.isShow = false;
@@ -445,13 +447,13 @@ __webpack_require__.r(__webpack_exports__);
           //圆角半径 radius
           if (this.imgConfig.r + num < 0) return;
           this.imgConfig.r = this.imgConfig.r * 1 + num;
-          this.$children[0].handleImgR(this.imgConfig.r);
+          this.$refs.img.handleImgR(this.imgConfig.r);
           break;
         case 'font':
           //字体大小 font size
           if (this.fontConfig.size + num < 0) return;
           this.fontConfig.size = this.fontConfig.size * 1 + num;
-          this.$children[1].handleFontSize(this.fontConfig.size);
+          this.$refs.font.handleFontSize(this.fontConfig.size);
           break;
         case 'canvas':
           if (this.canvasConfig.lineWidth + num < 0 || this.canvasConfig.lineWidth + num > 5) return;
@@ -469,7 +471,7 @@ __webpack_require__.r(__webpack_exports__);
           this.timer = setInterval(function () {
             if (_this2.imgConfig.r + num < 0) return;
             _this2.imgConfig.r = _this2.imgConfig.r * 1 + num;
-            _this2.$children[0].handleImgR(_this2.imgConfig.r);
+            _this2.$refs.img.handleImgR(_this2.imgConfig.r);
           }, 30);
           break;
         case 'font':
@@ -477,7 +479,7 @@ __webpack_require__.r(__webpack_exports__);
           this.timer = setInterval(function () {
             if (_this2.fontConfig.size + num < 0) return;
             _this2.fontConfig.size = _this2.fontConfig.size * 1 + num;
-            _this2.$children[1].handleFontSize(_this2.fontConfig.size);
+            _this2.$refs.font.handleFontSize(_this2.fontConfig.size);
           }, 30);
           break;
         case 'canvas':
@@ -495,12 +497,12 @@ __webpack_require__.r(__webpack_exports__);
         case 'img':
           //旋转角度 rotate degrees
           this.imgConfig.degrees = this.imgConfig.degrees * 1 + num;
-          this.$children[0].handleImgDegrees(this.imgConfig.degrees);
+          this.$refs.img.handleImgDegrees(this.imgConfig.degrees);
           break;
         case 'font':
           if (this.fontConfig.lineHeight + num < 0) return;
           this.fontConfig.lineHeight = this.fontConfig.lineHeight * 1 + num;
-          this.$children[1].handleFontLineHeight(this.fontConfig.lineHeight);
+          this.$refs.font.handleFontLineHeight(this.fontConfig.lineHeight);
           break;
         case 'canvas':
           if (this.canvasConfig.keenness + num < 0 || this.canvasConfig.keenness + num > 5) return;
@@ -516,7 +518,7 @@ __webpack_require__.r(__webpack_exports__);
           //旋转角度 rotate degrees
           this.timer = setInterval(function () {
             _this3.imgConfig.degrees = _this3.imgConfig.degrees * 1 + num;
-            _this3.$children[0].handleImgDegrees(_this3.imgConfig.degrees);
+            _this3.$refs.img.handleImgDegrees(_this3.imgConfig.degrees);
           }, 30);
 
           break;
@@ -524,7 +526,7 @@ __webpack_require__.r(__webpack_exports__);
           this.timer = setInterval(function () {
             if (_this3.fontConfig.lineHeight + num < 0) return;
             _this3.fontConfig.lineHeight = _this3.fontConfig.lineHeight * 1 + num;
-            _this3.$children[1].handleFontLineHeight(_this3.fontConfig.lineHeight);
+            _this3.$refs.font.handleFontLineHeight(_this3.fontConfig.lineHeight);
           }, 30);
 
           break;
@@ -542,23 +544,22 @@ __webpack_require__.r(__webpack_exports__);
       if (this.editType === 'img') {
         //设置阴影 set shadow
         this.imgConfig.shadow = !this.imgConfig.shadow;
-        this.$children[0].handleImgShadow();
+        this.$refs.img.handleImgShadow();
       }
     },
     tapBtn1: function tapBtn1() {
       switch (this.editType) {
         case 'img':
           //居中 align center
-          this.$children[0].handleImgCenter(this.container.w);
+          this.$refs.img.handleImgCenter(this.container.w);
           break;
         case 'font':
           //居中 align center
-          this.$children[1].handleFontCenter(this.container.w);
+          this.$refs.font.handleFontCenter(this.container.w);
           break;
         case 'canvas':
           //clear 清空
-          // console.log(this.$children[2].handleClear())
-          this.$children[3].handleClear();
+          this.$refs.canvas.handleClear();
           break;
         default:
           break;}
@@ -568,16 +569,16 @@ __webpack_require__.r(__webpack_exports__);
       switch (this.editType) {
         case 'img':
           //铺满 full container
-          this.$children[0].handleImgFullContainer(this.container.w);
+          this.$refs.img.handleImgFullContainer(this.container.w);
           break;
         case 'font':
           //加粗 font weight
           this.fontConfig.weight = !this.fontConfig.weight;
-          this.$children[1].handleFontWeight();
+          this.$refs.font.handleFontWeight();
           break;
         //保存本地 save to local
         case 'canvas':
-          this.$children[3].save();
+          this.$refs.canvas.save();
           break;
         default:
           break;}
@@ -587,16 +588,16 @@ __webpack_require__.r(__webpack_exports__);
       switch (this.editType) {
         case 'img':
           //置顶 set2top
-          this.$children[0].handleImgSet2top();
+          this.$refs.img.handleImgSet2top();
           break;
         case 'font':
-          this.$children[2].handldWin();
+          this.$refs.color.handldWin();
           break;
-
         case 'canvas':
-          this.$children[2].handldWin();
+          this.$refs.color.handldWin();
           break;
         default:
+          this.$refs.color.handldWin();
           break;}
 
     },
@@ -604,15 +605,15 @@ __webpack_require__.r(__webpack_exports__);
       switch (this.editType) {
         case 'img':
           //置底 set2bottom
-          this.$children[0].handleImgSet2bottom();
+          this.$refs.img.handleImgSet2bottom();
           break;
         case 'font':
           //贯穿 through
           this.fontConfig.lineThrough = !this.fontConfig.lineThrough;
-          this.$children[1].handleFontLineThrough();
+          this.$refs.font.handleFontLineThrough();
           break;
         case 'canvas':
-          this.$children[3].confirm();
+          this.$refs.canvas.confirm();
           break;
         default:
           break;}

@@ -1,9 +1,9 @@
 <template>
 	<view>
 		<view class="zx-container" @tap='cancelEditType' :style="{ height:container.h+'px'}">
-			<imgEdit v-model="imageList" :active.sync='imgActive'></imgEdit>
-			<fontEdit v-model="textList" :active.sync='textActive'></fontEdit>
-			<canvasEdit v-if="editType=='canvas'" v-model="canvasConfig" @handleCanvasImage="handleCanvasImage"></canvasEdit>
+			<imgEdit ref="img" v-model="imageList" :active.sync='imgActive'></imgEdit>
+			<fontEdit ref="font" v-model="textList" :active.sync='textActive'></fontEdit>
+			<canvasEdit ref="canvas" v-if="editType=='canvas'" v-model="canvasConfig" @handleCanvasImage="handleCanvasImage"></canvasEdit>
 			<view class="zx-adjust-size" @tap.stop @touchmove.stop='canvasAdjustMove'>===</view>
 		</view>
 		<!--        <adjustment @handlePosition="handlePosition" @handleColor="handleColor" @hanldeFontSrc="hanldeFontSrc" @hanldeImgSrc="hanldeImgSrc"></adjustment>-->
@@ -12,8 +12,8 @@
 				<view class="zx-unfold" @tap="unfold">||</view>
 				<view class="zx-title">
 					<view>
-						<button class="zx-btn" :class="editType=='img'?'zx-select':''" @tap="handleOtherType">图</button>
-						<button class="zx-btn" :class="editType=='font'?'zx-select':''" @tap="handleOtherType">A</button>
+						<button class="zx-btn" :class="editType=='img'?'zx-select':''" @tap="handleImgType">图</button>
+						<button class="zx-btn" :class="editType=='font'?'zx-select':''" @tap="handleFontType">A</button>
 						<button class="zx-btn" :class="editType=='canvas'?'zx-select':''" @tap="handleCanvasType">画
 						</button>
 					</view>
@@ -66,7 +66,7 @@
 						</button>
 					</view>
 				</view>
-				<zxColor @getColor="getColor"></zxColor>
+				<zxColor ref="color" @getColor="getColor"></zxColor>
 			</view>
 			<view class="zx-pull-src">
 				<button class="zx-add-img-btn" @tap="uploadImg">+</button>
@@ -74,21 +74,24 @@
 				<button class="zx-add-text-btn" @tap="handleText">{{editType=='font'?'修改':'新增'}}</button>
 			</view>
 		</view>
+		<zx-info ref="info"></zx-info>
 	</view>
 </template>
 
 <script>
-	import fontEdit from './fontEdit.vue'
 	import imgEdit from './imgEdit.vue'
+	import fontEdit from './fontEdit.vue'
 	import canvasEdit from './canvasEdit'
 	import zxColor from './zxColor'
+	import zxInfo from './info'
 
 	export default {
 		components: {
 			imgEdit,
 			fontEdit,
 			canvasEdit,
-			zxColor
+			zxColor,
+			zxInfo
 		},
 		data() {
 			return {
@@ -170,24 +173,33 @@
 			textActive(val) {
 				if (val > -1) {
 					if (this.editType !== 'font') {
-						this.editType = 'font'
 						this.imgActive = -1
+						this.editType = 'font'
 					}
 					this.fontConfig = this.textList[val].config;
 					this.inputContent = this.textList[val].content
-				} else {
-					this.inputContent = ''
+				} else if (this.imgActive === -1 && this.textActive === -1 && this.editType !== 'canvas') {
+					this.editType = null
 				}
 			},
 			imgActive(val) {
 				if (val > -1) {
 					if (this.editType !== 'img') {
-						this.editType = 'img'
 						this.textActive = -1
+						this.editType = 'img'
 					}
 					this.imgConfig = this.imageList[val].config;
+				} else if (this.imgActive === -1 && this.textActive === -1 && this.editType !== 'canvas') {
+					this.editType = null
 				}
 			},
+			editType(val) {
+				if (!val || val === 'canvas') {
+					this.textActive = -1
+					this.imgActive = -1
+					this.inputContent = ''
+				}
+			}
 		},
 		onLoad() {
 			this.imgConfig = this.defaultConfig.img
@@ -218,11 +230,14 @@
 			},
 			cancelEditType() {
 				this.editType = null
-				this.textActive = -1
-				this.imgActive = -1
 			},
-			handleOtherType() {
-				if (this.editType === 'canvas') {
+			handleImgType() {
+				if (this.editType !== 'img') {
+					this.editType = null
+				}
+			},
+			handleFontType() {
+				if (this.editType !== 'font') {
 					this.editType = null
 				}
 			},
@@ -232,8 +247,8 @@
 			},
 			getColor(e) {
 				this.curColor = e
-				this.$children[1].handleFontColor(e)
-				this.$children[3].handleCanvasColor(e)
+				this.$refs.font.handleFontColor(e)
+				this.$refs.canvas.handleCanvasColor(e)
 				this.canvasConfig.color = e
 			},
 			//上传图片 upload img
@@ -291,23 +306,10 @@
 				}
 			},
 			handleCanvasType() {
-				if (this.editType !== 'canvas') {
-					this.editType = 'canvas'
-				} else {
-					this.editType = null
-				}
+				this.editType = 'canvas'
 			},
 			info() {
-				uni.showModal({
-					title: '提示',
-					content: '<p>',
-					showCancel: false,
-					success: (res) => {
-						if (res.confirm) {
-
-						}
-					}
-				});
+				this.$refs.info.handldWin()
 			},
 			close() {
 				this.isShow = false
@@ -321,13 +323,13 @@
 						//圆角半径 radius
 						if (this.imgConfig.r + num < 0) return
 						this.imgConfig.r = this.imgConfig.r * 1 + num
-						this.$children[0].handleImgR(this.imgConfig.r)
+						this.$refs.img.handleImgR(this.imgConfig.r)
 						break;
 					case 'font':
 						//字体大小 font size
 						if (this.fontConfig.size + num < 0) return
 						this.fontConfig.size = this.fontConfig.size * 1 + num
-						this.$children[1].handleFontSize(this.fontConfig.size)
+						this.$refs.font.handleFontSize(this.fontConfig.size)
 						break;
 					case 'canvas':
 						if (this.canvasConfig.lineWidth + num < 0 || this.canvasConfig.lineWidth + num > 5) return
@@ -345,7 +347,7 @@
 						this.timer = setInterval(() => {
 							if (this.imgConfig.r + num < 0) return
 							this.imgConfig.r = this.imgConfig.r * 1 + num
-							this.$children[0].handleImgR(this.imgConfig.r)
+							this.$refs.img.handleImgR(this.imgConfig.r)
 						}, 30)
 						break;
 					case 'font':
@@ -353,10 +355,10 @@
 						this.timer = setInterval(() => {
 							if (this.fontConfig.size + num < 0) return
 							this.fontConfig.size = this.fontConfig.size * 1 + num
-							this.$children[1].handleFontSize(this.fontConfig.size)
+							this.$refs.font.handleFontSize(this.fontConfig.size)
 						}, 30)
 						break;
-					case 'canvas':		
+					case 'canvas':
 						break;
 					default:
 						break;
@@ -371,12 +373,12 @@
 					case 'img':
 						//旋转角度 rotate degrees
 						this.imgConfig.degrees = this.imgConfig.degrees * 1 + num
-						this.$children[0].handleImgDegrees(this.imgConfig.degrees)
+						this.$refs.img.handleImgDegrees(this.imgConfig.degrees)
 						break;
 					case 'font':
 						if (this.fontConfig.lineHeight + num < 0) return
 						this.fontConfig.lineHeight = this.fontConfig.lineHeight * 1 + num
-						this.$children[1].handleFontLineHeight(this.fontConfig.lineHeight)
+						this.$refs.font.handleFontLineHeight(this.fontConfig.lineHeight)
 						break;
 					case 'canvas':
 						if (this.canvasConfig.keenness + num < 0 || this.canvasConfig.keenness + num > 5) return
@@ -392,7 +394,7 @@
 						//旋转角度 rotate degrees
 						this.timer = setInterval(() => {
 							this.imgConfig.degrees = this.imgConfig.degrees * 1 + num
-							this.$children[0].handleImgDegrees(this.imgConfig.degrees)
+							this.$refs.img.handleImgDegrees(this.imgConfig.degrees)
 						}, 30)
 
 						break;
@@ -400,7 +402,7 @@
 						this.timer = setInterval(() => {
 							if (this.fontConfig.lineHeight + num < 0) return
 							this.fontConfig.lineHeight = this.fontConfig.lineHeight * 1 + num
-							this.$children[1].handleFontLineHeight(this.fontConfig.lineHeight)
+							this.$refs.font.handleFontLineHeight(this.fontConfig.lineHeight)
 						}, 30)
 
 						break;
@@ -418,23 +420,22 @@
 				if (this.editType === 'img') {
 					//设置阴影 set shadow
 					this.imgConfig.shadow = !this.imgConfig.shadow
-					this.$children[0].handleImgShadow()
+					this.$refs.img.handleImgShadow()
 				}
 			},
 			tapBtn1() {
 				switch (this.editType) {
 					case 'img':
 						//居中 align center
-						this.$children[0].handleImgCenter(this.container.w)
+						this.$refs.img.handleImgCenter(this.container.w)
 						break;
 					case 'font':
 						//居中 align center
-						this.$children[1].handleFontCenter(this.container.w)
+						this.$refs.font.handleFontCenter(this.container.w)
 						break;
 					case 'canvas':
 						//clear 清空
-						// console.log(this.$children[2].handleClear())
-						this.$children[3].handleClear()
+						this.$refs.canvas.handleClear()
 						break;
 					default:
 						break;
@@ -444,16 +445,16 @@
 				switch (this.editType) {
 					case 'img':
 						//铺满 full container
-						this.$children[0].handleImgFullContainer(this.container.w)
+						this.$refs.img.handleImgFullContainer(this.container.w)
 						break;
 					case 'font':
 						//加粗 font weight
 						this.fontConfig.weight = !this.fontConfig.weight
-						this.$children[1].handleFontWeight()
+						this.$refs.font.handleFontWeight()
 						break;
 						//保存本地 save to local
 					case 'canvas':
-						this.$children[3].save()
+						this.$refs.canvas.save()
 						break;
 					default:
 						break;
@@ -463,16 +464,16 @@
 				switch (this.editType) {
 					case 'img':
 						//置顶 set2top
-						this.$children[0].handleImgSet2top()
+						this.$refs.img.handleImgSet2top()
 						break;
 					case 'font':
-						this.$children[2].handldWin()
+						this.$refs.color.handldWin()
 						break;
-
 					case 'canvas':
-						this.$children[2].handldWin()
+						this.$refs.color.handldWin()
 						break;
 					default:
+						this.$refs.color.handldWin()
 						break;
 				}
 			},
@@ -480,15 +481,15 @@
 				switch (this.editType) {
 					case 'img':
 						//置底 set2bottom
-						this.$children[0].handleImgSet2bottom()
+						this.$refs.img.handleImgSet2bottom()
 						break;
 					case 'font':
 						//贯穿 through
 						this.fontConfig.lineThrough = !this.fontConfig.lineThrough
-						this.$children[1].handleFontLineThrough()
+						this.$refs.font.handleFontLineThrough()
 						break;
 					case 'canvas':
-						this.$children[3].confirm()
+						this.$refs.canvas.confirm()
 						break;
 					default:
 						break;

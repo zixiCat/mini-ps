@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<image @tap.stop class="zx-img" :class="active===index?'zx-move':''"  :style="{
+		<image @tap.stop class="zx-img" :class="active===index?'zx-move':''" :style="{
 		left: item.position.x+'px',
 		top: item.position.y+'px',
 		width: item.position.w+'px',
