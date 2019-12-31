@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "商家详情",
+  "onReachBottomDistance": 100,
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "item-list": "/component/item-list"
+  }
+}

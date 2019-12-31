@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "手拉手首页",
+  "onReachBottomDistance": 100,
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "cart": "/pages/cart/icon-link"
+  }
+}

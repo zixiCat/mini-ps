@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "自营",
+  "onReachBottomDistance": 100,
+  "enablePullDownRefresh": true,
+  "usingComponents": {}
+}

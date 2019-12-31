@@ -1,0 +1,1 @@
+<view data-event-opts="{{[['tap',[['jump2cart',['$event']]]]]}}" class="round padding-sm text-xxl cuIcon-cart bg-orange zx-cart" bindtap="__e"><view class="zx-num text-center bg-red text-sm round">9</view></view>

@@ -1,0 +1,1 @@
+<view class="flex-sub text-center"><view class="solid-bottom text-xsl"><text class=" cuIcon-roundcheckfill text-green"></text></view><view class="padding text-lg">您的订单已支付成功</view><button data-event-opts="{{[['tap',[['home',['$event']]]]]}}" class="cu-btn shadow-blur bg-gradual-orange margin-right" bindtap="__e">返 回 首 页</button></view>

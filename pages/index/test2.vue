@@ -1,0 +1,518 @@
+<template>
+	<view>
+		<view class="zx-container" @tap='cancelEditType' :style="{ height:container.h+'px'}">
+			<imgEdit v-model="imageList" :active.sync='imgActive'></imgEdit>
+			<fontEdit v-model="textList" :active.sync='textActive'></fontEdit>
+			<canvasEdit v-if="editType=='canvas'" v-model="canvasConfig" @handleCanvasImage="handleCanvasImage"></canvasEdit>
+			<view class="zx-adjust-size" @tap.stop @touchmove.stop='canvasAdjustMove'>===</view>
+		</view>
+		<!--        <adjustment @handlePosition="handlePosition" @handleColor="handleColor" @hanldeFontSrc="hanldeFontSrc" @hanldeImgSrc="hanldeImgSrc"></adjustment>-->
+		<view>
+			<view class="zx-config" :class="isShow?'zx-slide-in':'zx-slide-out'">
+				<view class="zx-unfold" @tap="unfold">||</view>
+				<view class="zx-title">
+					<view>
+						<button class="zx-btn" :class="editType=='img'?'zx-select':''" @tap="handleOtherType">图</button>
+						<button class="zx-btn" :class="editType=='font'?'zx-select':''" @tap="handleOtherType">A</button>
+						<button class="zx-btn" :class="editType=='canvas'?'zx-select':''" @tap="handleCanvasType">画
+						</button>
+					</view>
+					<view>
+						<button v-if="editType!=='img'" class="zx-btn" :style="{backgroundColor: curColor}" @click="tapBtn3"></button>
+						<button v-if="editType==='img'" class="zx-btn" sclass="zx-btn" :class="imgConfig.shadow?'zx-select':''" @tap="tapBtn0">阴</button>
+						<button class="zx-btn" @tap="info">!</button>
+						<button class="zx-btn" @tap="close">X</button>
+					</view>
+				</view>
+				<view v-if="!editType" class="zx-body">
+					<view class="zx-tips">
+						请选择/插入文字或图片
+					</view>
+				</view>
+				<view v-if="editType" class="zx-body">
+					<view>
+						<view class="zx-range">
+							<view class="zx-label">{{btnType[editType].range1}}</view>
+							<button class="zx-range-btn" @longpress='longpressRange1(-1)' @touchcancel="touchendRange1" @touchend="touchendRange1"
+							 @tap="tapRange1(-1)">-
+							</button>
+							<input disabled v-if="editType==='img'" type="number" v-model.trim="imgConfig.r" />
+							<input disabled v-if="editType==='font'" type="number" v-model.trim="fontConfig.size" />
+							<input disabled v-if="editType==='canvas'" type="number" v-model.trim="canvasConfig.lineWidth" />
+							<button class="zx-range-btn" @longpress='longpressRange1(1)' @touchcancel="touchendRange1" @touchend="touchendRange1"
+							 @tap="tapRange1(1)">+
+							</button>
+						</view>
+						<view class="zx-range">
+							<view class="zx-label">{{btnType[editType].range2}}</view>
+							<button class="zx-range-btn" @longpress='longpressRange2(-1)' @touchcancel="touchendRange2" @touchend="touchendRange2"
+							 @tap="tapRange2(-1)">-
+							</button>
+							<input disabled v-if="editType==='img'" type="number" v-model.trim="imgConfig.degrees" />
+							<input disabled v-if="editType==='font'" type="number" v-model.trim="fontConfig.lineHeight" />
+							<input disabled v-if="editType==='canvas'" type="number" v-model.trim="canvasConfig.keenness" />
+							<button class="zx-range-btn" @longpress='longpressRange2(1)' @touchcancel="touchendRange2" @touchend="touchendRange2"
+							 @tap="tapRange2(1)">+
+							</button>
+						</view>
+					</view>
+					<view class="zx-operate">
+						<button class="zx-btn" @tap="tapBtn1">{{btnType[editType].btn1}}</button>
+						<button class="zx-btn" :class="fontConfig.weight?'zx-select':''" @tap="tapBtn2">
+							{{btnType[editType].btn2}}
+						</button>
+						<button class="zx-btn" @tap="tapBtn3">{{btnType[editType].btn3}}</button>
+						<button class="zx-btn" :class="fontConfig.lineThrough?'zx-select':''" @tap="tapBtn4">{{btnType[editType].btn4}}
+						</button>
+					</view>
+				</view>
+				<zxColor @getColor="getColor"></zxColor>
+			</view>
+			<view class="zx-pull-src">
+				<button class="zx-add-img-btn" @tap="uploadImg">+</button>
+				<input class="zx-content" placeholder="输入文本内容" v-model.trim="inputContent"></input>
+				<button class="zx-add-text-btn" @tap="handleText">{{editType=='font'?'修改':'新增'}}</button>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import fontEdit from './fontEdit.vue'
+	import imgEdit from './imgEdit.vue'
+	import canvasEdit from './canvasEdit'
+	import zxColor from './zxColor'
+
+	export default {
+		components: {
+			imgEdit,
+			fontEdit,
+			canvasEdit,
+			zxColor
+		},
+		data() {
+			return {
+				//画布尺寸 measure
+				imageList: [],
+				textList: [],
+				textActive: -1,
+				imgActive: -1,
+				curColor: '#000',
+				isShow: true,
+				timer: null,
+				btnType: {
+					font: {
+						range1: '字体大小',
+						range2: '行间距',
+						btn1: '居中',
+						btn2: '加粗',
+						btn3: '颜色',
+						btn4: '贯穿'
+					},
+					img: {
+						range1: '圆角半径',
+						range2: '旋转角度',
+						btn1: '居中',
+						btn2: '铺满',
+						btn3: '置顶',
+						btn4: '置底'
+					},
+					canvas: {
+						range1: '笔画大小',
+						range2: '笔锋程度',
+						btn1: '清空',
+						btn2: '保存',
+						btn3: '颜色',
+						btn4: '确认'
+					}
+				},
+				defaultConfig: {
+					imgPosition: {
+						x: 50,
+						y: 50,
+						w: 200
+					},
+					fontPosition: {
+						x: 50,
+						y: 50,
+						w: 200
+					},
+					img: {
+						r: 0,
+						degrees: 0,
+						shadow: false
+					},
+					font: {
+						lineHeight: 14,
+						size: 14,
+						weight: false,
+						lineThrough: false,
+						color: '#000',
+					},
+					canvas: {
+						color: '#000',
+						lineWidth: 2,
+						keenness: 0
+					}
+				},
+				editType: null,
+				container: {
+					w: null,
+					h: null
+				},
+				imgConfig: {},
+				fontConfig: {},
+				canvasConfig: {},
+				inputContent: '',
+			}
+		},
+		watch: {
+			textActive(val) {
+				if (val > -1) {
+					if (this.editType !== 'font') {
+						this.editType = 'font'
+						this.imgActive = -1
+					}
+					this.fontConfig = this.textList[val].config;
+					this.inputContent = this.textList[val].content
+				} else {
+					this.inputContent = ''
+				}
+			},
+			imgActive(val) {
+				if (val > -1) {
+					if (this.editType !== 'img') {
+						this.editType = 'img'
+						this.textActive = -1
+					}
+					this.imgConfig = this.imageList[val].config;
+				}
+			},
+		},
+		onLoad() {
+			this.imgConfig = this.defaultConfig.img
+			this.fontConfig = this.defaultConfig.font
+			this.canvasConfig = this.defaultConfig.canvas
+			this.k = uni.getSystemInfoSync().screenWidth / 750
+			this.setContainerW()
+		},
+		methods: {
+			/* 单位转换 unit conversion */
+			px2rpx() {
+				if (arguments.length == 1)
+					return arguments[0] / this.k
+				let params = []
+				for (let i of arguments) {
+					params.push(i / this.k)
+				}
+				return params
+			},
+			rpx2px() {
+				if (arguments.length == 1)
+					return arguments[0] * this.k
+				let params = []
+				for (let i of arguments) {
+					params.push(i * this.k)
+				}
+				return params
+			},
+			cancelEditType() {
+				this.editType = null
+				this.textActive = -1
+				this.imgActive = -1
+			},
+			handleOtherType() {
+				if (this.editType === 'canvas') {
+					this.editType = null
+				}
+			},
+			setContainerW() {
+				this.container.w = this.rpx2px(720)
+				this.container.h = this.rpx2px(880)
+			},
+			getColor(e) {
+				this.curColor = e
+				this.$children[1].handleFontColor(e)
+				this.$children[3].handleCanvasColor(e)
+				this.canvasConfig.color = e
+			},
+			//上传图片 upload img
+			uploadImg() {
+				uni.chooseImage({
+					count: 1,
+					sourceType: ['album', 'camera'],
+					success: res => {
+						uni.getImageInfo({
+							src: res.tempFilePaths[0],
+							success: info => {
+								this.imageList.push({
+									src: res.tempFilePaths[0],
+									position: {
+										...this.defaultConfig.imgPosition,
+										h: 200 * info.height / info.width,
+									},
+									config: this.defaultConfig.img,
+									isMove: false
+								})
+								this.textActive = -1
+								this.imgActive = this.imageList.length - 1
+								this.editType = 'img'
+							}
+						})
+					}
+				})
+			},
+			//新增或编辑文字 add or edit text
+			handleText() {
+				if (!this.inputContent) {
+					uni.showModal({
+						title: '提示',
+						content: '这是一个模态弹窗',
+						showCancel: false,
+						success: function(res) {
+							if (res.confirm) {
+
+							}
+						}
+					});
+				} else if (this.editType !== 'font') {
+					this.defaultConfig.font.color = this.curColor
+					this.textList.push({
+						content: this.inputContent,
+						position: this.defaultConfig.fontPosition,
+						config: this.defaultConfig.font,
+						isMove: false
+					})
+					this.imgActive = -1
+					this.textActive = this.textList.length - 1
+					this.editType = 'font'
+				} else {
+					this.textList[this.textActive].content = this.inputContent
+				}
+			},
+			handleCanvasType() {
+				if (this.editType !== 'canvas') {
+					this.editType = 'canvas'
+				} else {
+					this.editType = null
+				}
+			},
+			info() {
+				uni.showModal({
+					title: '提示',
+					content: '<p>',
+					showCancel: false,
+					success: (res) => {
+						if (res.confirm) {
+
+						}
+					}
+				});
+			},
+			close() {
+				this.isShow = false
+			},
+			unfold() {
+				this.isShow = true
+			},
+			tapRange1(num) {
+				switch (this.editType) {
+					case 'img':
+						//圆角半径 radius
+						if (this.imgConfig.r + num < 0) return
+						this.imgConfig.r = this.imgConfig.r * 1 + num
+						this.$children[0].handleImgR(this.imgConfig.r)
+						break;
+					case 'font':
+						//字体大小 font size
+						if (this.fontConfig.size + num < 0) return
+						this.fontConfig.size = this.fontConfig.size * 1 + num
+						this.$children[1].handleFontSize(this.fontConfig.size)
+						break;
+					case 'canvas':
+						if (this.canvasConfig.lineWidth + num < 0 || this.canvasConfig.lineWidth + num > 5) return
+						this.canvasConfig.lineWidth = this.canvasConfig.lineWidth * 1 + num
+						break;
+					default:
+						break;
+				}
+			},
+			longpressRange1(num) {
+
+				switch (this.editType) {
+					case 'img':
+						//圆角半径 radius
+						this.timer = setInterval(() => {
+							if (this.imgConfig.r + num < 0) return
+							this.imgConfig.r = this.imgConfig.r * 1 + num
+							this.$children[0].handleImgR(this.imgConfig.r)
+						}, 30)
+						break;
+					case 'font':
+						//字体大小 font size
+						this.timer = setInterval(() => {
+							if (this.fontConfig.size + num < 0) return
+							this.fontConfig.size = this.fontConfig.size * 1 + num
+							this.$children[1].handleFontSize(this.fontConfig.size)
+						}, 30)
+						break;
+					case 'canvas':		
+						break;
+					default:
+						break;
+				}
+			},
+			touchendRange1() {
+				clearInterval(this.timer)
+				this.timer = null
+			},
+			tapRange2(num) {
+				switch (this.editType) {
+					case 'img':
+						//旋转角度 rotate degrees
+						this.imgConfig.degrees = this.imgConfig.degrees * 1 + num
+						this.$children[0].handleImgDegrees(this.imgConfig.degrees)
+						break;
+					case 'font':
+						if (this.fontConfig.lineHeight + num < 0) return
+						this.fontConfig.lineHeight = this.fontConfig.lineHeight * 1 + num
+						this.$children[1].handleFontLineHeight(this.fontConfig.lineHeight)
+						break;
+					case 'canvas':
+						if (this.canvasConfig.keenness + num < 0 || this.canvasConfig.keenness + num > 5) return
+						this.canvasConfig.keenness = this.canvasConfig.keenness * 1 + num
+						break;
+					default:
+						break;
+				}
+			},
+			longpressRange2(num) {
+				switch (this.editType) {
+					case 'img':
+						//旋转角度 rotate degrees
+						this.timer = setInterval(() => {
+							this.imgConfig.degrees = this.imgConfig.degrees * 1 + num
+							this.$children[0].handleImgDegrees(this.imgConfig.degrees)
+						}, 30)
+
+						break;
+					case 'font':
+						this.timer = setInterval(() => {
+							if (this.fontConfig.lineHeight + num < 0) return
+							this.fontConfig.lineHeight = this.fontConfig.lineHeight * 1 + num
+							this.$children[1].handleFontLineHeight(this.fontConfig.lineHeight)
+						}, 30)
+
+						break;
+					case 'canvas':
+						break;
+					default:
+						break;
+				}
+			},
+			touchendRange2() {
+				clearInterval(this.timer)
+				this.timer = null
+			},
+			tapBtn0() {
+				if (this.editType === 'img') {
+					//设置阴影 set shadow
+					this.imgConfig.shadow = !this.imgConfig.shadow
+					this.$children[0].handleImgShadow()
+				}
+			},
+			tapBtn1() {
+				switch (this.editType) {
+					case 'img':
+						//居中 align center
+						this.$children[0].handleImgCenter(this.container.w)
+						break;
+					case 'font':
+						//居中 align center
+						this.$children[1].handleFontCenter(this.container.w)
+						break;
+					case 'canvas':
+						//clear 清空
+						// console.log(this.$children[2].handleClear())
+						this.$children[3].handleClear()
+						break;
+					default:
+						break;
+				}
+			},
+			tapBtn2() {
+				switch (this.editType) {
+					case 'img':
+						//铺满 full container
+						this.$children[0].handleImgFullContainer(this.container.w)
+						break;
+					case 'font':
+						//加粗 font weight
+						this.fontConfig.weight = !this.fontConfig.weight
+						this.$children[1].handleFontWeight()
+						break;
+						//保存本地 save to local
+					case 'canvas':
+						this.$children[3].save()
+						break;
+					default:
+						break;
+				}
+			},
+			tapBtn3() {
+				switch (this.editType) {
+					case 'img':
+						//置顶 set2top
+						this.$children[0].handleImgSet2top()
+						break;
+					case 'font':
+						this.$children[2].handldWin()
+						break;
+
+					case 'canvas':
+						this.$children[2].handldWin()
+						break;
+					default:
+						break;
+				}
+			},
+			tapBtn4() {
+				switch (this.editType) {
+					case 'img':
+						//置底 set2bottom
+						this.$children[0].handleImgSet2bottom()
+						break;
+					case 'font':
+						//贯穿 through
+						this.fontConfig.lineThrough = !this.fontConfig.lineThrough
+						this.$children[1].handleFontLineThrough()
+						break;
+					case 'canvas':
+						this.$children[3].confirm()
+						break;
+					default:
+						break;
+				}
+			},
+			handleCanvasImage(url, info) {
+				this.imageList.push({
+					src: url,
+					position: info,
+					config: this.defaultConfig.img,
+					isMove: false
+				})
+				this.imgActive = this.imageList.length - 1
+				this.editType = 'img'
+			},
+			//画布调整 canvas adjustment
+			canvasAdjustMove(e) {
+				if (e.touches[0].clientY < 100) return
+				this.container.h = e.touches[0].clientY
+			},
+		}
+	}
+</script>
+
+<style lang="scss">
+	@import "./test.scss";
+</style>

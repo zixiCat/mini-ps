@@ -1,0 +1,1 @@
+.zx-header{position:fixed;top:0;width:100%;z-index:1}.zx-header .zx-avatar{height:70rpx;width:70rpx}.zx-header .zx-text{line-height:70rpx}.zx-content{margin-top:90rpx}.zx-content image{display:block;width:100%}.zx-comment .zx-list{max-height:888rpx;overflow:scroll}.zx-comment .zx-list .zx-avatar{width:70rpx;height:70rpx}.zx-recommend{margin-bottom:120rpx}

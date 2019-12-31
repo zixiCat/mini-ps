@@ -1,0 +1,87 @@
+{
+  "pages": [
+    "pages/index/test2",
+    "pages/index/index",
+    "pages/category/index",
+    "pages/shops/index",
+    "pages/shops/detail",
+    "pages/community/index",
+    "pages/community/detail",
+    "pages/user/index",
+    "pages/item/list",
+    "pages/item/index",
+    "pages/item/comment",
+    "pages/item/comment-detail",
+    "pages/search/index",
+    "pages/search/result",
+    "pages/cart/index",
+    "pages/cart/order-confirm",
+    "pages/cart/pay-success",
+    "pages/credit/index",
+    "pages/credit/user",
+    "pages/list/address/index",
+    "pages/list/credit/detail",
+    "pages/list/credit/log",
+    "pages/list/order/index",
+    "pages/list/order/comment",
+    "pages/list/order/service",
+    "pages/list/user/favorite",
+    "pages/list/user/history",
+    "pages/list/user/subcribe",
+    "pages/form/address/index",
+    "pages/form/shops/sign-in",
+    "pages/form/user/index",
+    "pages/content/rich-text/index"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "borderStyle": "white",
+    "color": "#8a8a8a",
+    "selectedColor": "#FF6D00",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "static/tabbar/home.png",
+        "selectedIconPath": "static/tabbar/home (1).png"
+      },
+      {
+        "pagePath": "pages/category/index",
+        "text": "自营",
+        "iconPath": "static/tabbar/category.png",
+        "selectedIconPath": "static/tabbar/category (1).png"
+      },
+      {
+        "pagePath": "pages/shops/index",
+        "text": "商家",
+        "iconPath": "static/tabbar/shops.png",
+        "selectedIconPath": "static/tabbar/shops (1).png"
+      },
+      {
+        "pagePath": "pages/community/index",
+        "text": "圈子",
+        "iconPath": "static/tabbar/community.png",
+        "selectedIconPath": "static/tabbar/community (1).png"
+      },
+      {
+        "pagePath": "pages/user/index",
+        "text": "我的",
+        "iconPath": "static/tabbar/user.png",
+        "selectedIconPath": "static/tabbar/user (1).png"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "位置信息将用于为您推荐附近商家"
+    }
+  },
+  "usingComponents": {},
+  "sitemapLocation": "sitemap.json"
+}

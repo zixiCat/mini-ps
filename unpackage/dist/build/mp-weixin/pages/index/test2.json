@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "返回",
+  "usingComponents": {
+    "img-edit": "/pages/index/imgEdit",
+    "font-edit": "/pages/index/fontEdit",
+    "canvas-edit": "/pages/index/canvasEdit",
+    "zx-color": "/pages/index/zxColor"
+  }
+}

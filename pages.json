@@ -1,0 +1,476 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		// {
+		// 	"path": "pages/index/test",
+		// 	"style": {
+		// 		"navigationBarTitleText": "返回"
+		// 	}
+		// },
+		{
+			"path": "pages/index/test2",
+			"style": {
+				"navigationBarTitleText": "返回"
+			}
+		},
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "手拉手首页",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/category/index",
+			"style": {
+				"navigationBarTitleText": "自营",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/shops/index",
+			"style": {
+				"navigationBarTitleText": "商家",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/shops/detail",
+			"style": {
+				"navigationBarTitleText": "商家详情",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/community/index",
+			"style": {
+				"navigationBarTitleText": "圈子",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/community/detail",
+			"style": {
+				"navigationBarTitleText": "圈子",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/user/index",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/item/list",
+			"style": {
+				"navigationBarTitleText": "商品列表",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/item/index",
+			"style": {
+				"navigationBarTitleText": "商品介绍",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/item/comment",
+			"style": {
+				"navigationBarTitleText": "全部评价",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/item/comment-detail",
+			"style": {
+				"navigationBarTitleText": "评价详情",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/search/index",
+			"style": {
+				"navigationBarTitleText": "返回"
+			}
+		},
+		{
+			"path": "pages/search/result",
+			"style": {
+				"navigationBarTitleText": "返回",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/cart/index",
+			"style": {
+				"navigationBarTitleText": "返回",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/cart/order-confirm",
+			"style": {
+				"navigationBarTitleText": "确认订单",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/cart/pay-success",
+			"style": {
+				"navigationBarTitleText": "确认订单",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/credit/index",
+			"style": {
+				"navigationBarTitleText": "积分商城",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/credit/user",
+			"style": {
+				"navigationBarTitleText": "我的积分",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		/* 普通列表 */
+		{
+			"path": "pages/list/address/index",
+			"style": {
+				"navigationBarTitleText": "请选择收货地址",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/list/credit/detail",
+			"style": {
+				"navigationBarTitleText": "积分明细",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/list/credit/log",
+			"style": {
+				"navigationBarTitleText": "兑换记录",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/list/order/index",
+			"style": {
+				"navigationBarTitleText": "我的订单",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/list/order/comment",
+			"style": {
+				"navigationBarTitleText": "评价中心",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/list/order/service",
+			"style": {
+				"navigationBarTitleText": "售后",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/list/user/favorite",
+			"style": {
+				"navigationBarTitleText": "宝贝收藏",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/list/user/history",
+			"style": {
+				"navigationBarTitleText": "我的足迹",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/list/user/subcribe",
+			"style": {
+				"navigationBarTitleText": "关注店铺",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		/* 普通表单 */
+		{
+			"path": "pages/form/address/index",
+			"style": {
+				"navigationBarTitleText": "返回",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/form/shops/sign-in",
+			"style": {
+				"navigationBarTitleText": "商户入驻",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/form/user/index",
+			"style": {
+				"navigationBarTitleText": "用户设置",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		},
+		/* 普通内容 */
+		{
+			"path": "pages/content/rich-text/index",
+			"style": {
+				"navigationBarTitleText": "返回",
+				"onReachBottomDistance": 100,
+				"enablePullDownRefresh": true
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"borderStyle": "white",
+		"color": "#8a8a8a",
+		"selectedColor": "#FF6D00",
+		"list": [{
+				"pagePath": "pages/index/index",
+				"text": "首页",
+				"iconPath": "static/tabbar/home.png",
+				"selectedIconPath": "static/tabbar/home (1).png"
+			},
+			{
+				"pagePath": "pages/category/index",
+				"text": "自营",
+				"iconPath": "static/tabbar/category.png",
+				"selectedIconPath": "static/tabbar/category (1).png"
+			},
+			{
+				"pagePath": "pages/shops/index",
+				"text": "商家",
+				"iconPath": "static/tabbar/shops.png",
+				"selectedIconPath": "static/tabbar/shops (1).png"
+			},
+			{
+				"pagePath": "pages/community/index",
+				"text": "圈子",
+				"iconPath": "static/tabbar/community.png",
+				"selectedIconPath": "static/tabbar/community (1).png"
+			},
+			{
+				"pagePath": "pages/user/index",
+				"text": "我的",
+				"iconPath": "static/tabbar/user.png",
+				"selectedIconPath": "static/tabbar/user (1).png"
+			}
+		]
+	},
+	"condition": { //模式配置，仅开发期间生效
+		"current": 2, //当前激活的模式(list 的索引项)
+		"list": [{
+				"name": "测试", //模式名称
+				"path": "pages/index/test", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "测试2", //模式名称
+				"path": "pages/index/test2", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "首页", //模式名称
+				"path": "pages/index/index", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "自营", //模式名称
+				"path": "pages/category/index", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "商家", //模式名称
+				"path": "pages/shops/index", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "全部评价", //模式名称
+				"path": "pages/item/comment", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "评价详情", //模式名称
+				"path": "pages/item/comment-detail", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "商家详情", //模式名称
+				"path": "pages/shops/detail", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "圈子", //模式名称
+				"path": "pages/community/index", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "圈子内容", //模式名称
+				"path": "pages/community/detail", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "我的", //模式名称
+				"path": "pages/user/index", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "商品列表", //模式名称
+				"path": "pages/item/list", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "商品介绍", //模式名称
+				"path": "pages/item/index", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "搜索", //模式名称
+				"path": "pages/search/index", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "搜索结果", //模式名称
+				"path": "pages/search/result", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "购物车", //模式名称
+				"path": "pages/cart/index", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "新增/编辑地址", //模式名称
+				"path": "pages/form/address/index", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "选择收货地址", //模式名称
+				"path": "pages/list/address/index", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "商家入驻", //模式名称
+				"path": "pages/form/shops/sign-in", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "积分商城", //模式名称
+				"path": "pages/credit/index", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "我的积分", //模式名称
+				"path": "pages/credit/user", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "积分明细", //模式名称
+				"path": "pages/list/credit/detail", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "积分明细", //模式名称
+				"path": "pages/list/credit/log", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "确认订单", //模式名称
+				"path": "pages/cart/order-confirm", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "支付完成", //模式名称
+				"path": "pages/cart/pay-success", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "我的订单", //模式名称
+				"path": "pages/list/order/index", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "评价中心", //模式名称
+				"path": "pages/list/order/comment", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "售后", //模式名称
+				"path": "pages/list/order/service", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "宝贝收藏", //模式名称
+				"path": "pages/list/user/favorite", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "关注店铺", //模式名称
+				"path": "pages/list/user/subcribe", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "我的足迹", //模式名称
+				"path": "pages/list/user/history", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "用户设置", //模式名称
+				"path": "pages/form/user/index", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "富文本", //模式名称
+				"path": "pages/content/rich-text/index", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			}
+		]
+	}
+}
