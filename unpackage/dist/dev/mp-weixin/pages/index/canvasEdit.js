@@ -217,36 +217,42 @@ var _default =
         content: '是否将当前画布内容保存至本地',
         success: function success(res) {
           if (res.confirm) {
-            _this2.getCanvasImage('save');
+            setTimeout(function () {
+              _this2.getCanvasImage('save');
+            }, 300);
           }
         } });
 
     },
-    confirm: function confirm() {
-      this.getCanvasImage('confirm');
+    confirm: function confirm() {var _this3 = this;
+      setTimeout(function () {
+        _this3.getCanvasImage('confirm');
+      }, 300);
     },
-    getCanvasImage: function getCanvasImage(type) {var _this3 = this;
+    getCanvasImage: function getCanvasImage(type) {var _this4 = this;
       this.copyClip.x = Math.min.apply(Math, _toConsumableArray(this.clipX)) - 5;
       this.copyClip.y = Math.min.apply(Math, _toConsumableArray(this.clipY)) - 5;
       this.copyClip.w = Math.max.apply(Math, _toConsumableArray(this.clipX)) - this.copyClip.x + 5;
       this.copyClip.h = Math.max.apply(Math, _toConsumableArray(this.clipY)) - this.copyClip.y + 5;
-      this.ctx.draw(true);
-      uni.canvasToTempFilePath({
-        x: this.copyClip.x,
-        y: this.copyClip.y,
-        width: this.copyClip.w,
-        height: this.copyClip.h,
-        canvasId: 'canvas',
-        success: function success(res) {
-          if (type === 'save') {
-            uni.saveImageToPhotosAlbum({
-              filePath: res.tempFilePath });
+      this.ctx.draw(true, function (res) {
+        uni.canvasToTempFilePath({
+          x: _this4.copyClip.x,
+          y: _this4.copyClip.y,
+          width: _this4.copyClip.w,
+          height: _this4.copyClip.h,
+          canvasId: 'canvas',
+          success: function success(res) {
+            if (type === 'save') {
+              uni.saveImageToPhotosAlbum({
+                filePath: res.tempFilePath });
 
-          } else {
-            _this3.$emit('handleCanvasImage', res.tempFilePath, _this3.copyClip);
-          }
-        } },
-      this);
+            } else {
+              _this4.$emit('handleCanvasImage', res.tempFilePath, _this4.copyClip);
+            }
+          } },
+        _this4);
+      });
+
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

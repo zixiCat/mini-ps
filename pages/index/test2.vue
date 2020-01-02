@@ -18,6 +18,7 @@
 						</button>
 					</view>
 					<view>
+						<button class="zx-btn" style="width: 80rpx;" @tap="export2png">导出</button>
 						<button v-if="editType!=='img'" class="zx-btn" :style="{backgroundColor: curColor}" @click="tapBtn3"></button>
 						<button v-if="editType==='img'" class="zx-btn" sclass="zx-btn" :class="imgConfig.shadow?'zx-select':''" @tap="tapBtn0">阴</button>
 						<button class="zx-btn" @tap="info">!</button>
@@ -75,6 +76,7 @@
 			</view>
 		</view>
 		<zx-info ref="info"></zx-info>
+		<generate-img v-if="activeGenerate" :img="imageSrc" :canvasH="px2rpx(container.h)" ref="generate" @exportSuccess="exportSuccess"></generate-img>
 	</view>
 </template>
 
@@ -84,6 +86,7 @@
 	import canvasEdit from './canvasEdit'
 	import zxColor from './zxColor'
 	import zxInfo from './info'
+	import generateImg from './generateImg'
 
 	export default {
 		components: {
@@ -91,7 +94,8 @@
 			fontEdit,
 			canvasEdit,
 			zxColor,
-			zxInfo
+			zxInfo,
+			generateImg
 		},
 		data() {
 			return {
@@ -103,6 +107,7 @@
 				curColor: '#000',
 				isShow: true,
 				timer: null,
+				activeGenerate:false,
 				btnType: {
 					font: {
 						range1: '字体大小',
@@ -167,6 +172,9 @@
 				fontConfig: {},
 				canvasConfig: {},
 				inputContent: '',
+				imageSrc:null,
+				textSrc:null
+		
 			}
 		},
 		watch: {
@@ -201,10 +209,10 @@
 				}
 			}
 		},
-		onLoad() {
-			this.imgConfig = this.defaultConfig.img
-			this.fontConfig = this.defaultConfig.font
-			this.canvasConfig = this.defaultConfig.canvas
+		onReady() {
+			this.imgConfig =  JSON.parse(JSON.stringify(this.defaultConfig.img))   
+			this.fontConfig =JSON.parse(JSON.stringify(this.defaultConfig.font)) 
+			this.canvasConfig =JSON.parse(JSON.stringify(this.defaultConfig.canvas)) 
 			this.k = uni.getSystemInfoSync().screenWidth / 750
 			this.setContainerW()
 		},
@@ -215,7 +223,7 @@
 					return arguments[0] / this.k
 				let params = []
 				for (let i of arguments) {
-					params.push(i / this.k)
+					params.push((i / this.k)||0)
 				}
 				return params
 			},
@@ -224,7 +232,7 @@
 					return arguments[0] * this.k
 				let params = []
 				for (let i of arguments) {
-					params.push(i * this.k)
+					params.push((i * this.k)||0)
 				}
 				return params
 			},
@@ -248,7 +256,6 @@
 			getColor(e) {
 				this.curColor = e
 				this.$refs.font.handleFontColor(e)
-				this.$refs.canvas.handleCanvasColor(e)
 				this.canvasConfig.color = e
 			},
 			//上传图片 upload img
@@ -263,10 +270,21 @@
 								this.imageList.push({
 									src: res.tempFilePaths[0],
 									position: {
-										...this.defaultConfig.imgPosition,
+										x:this.defaultConfig.imgPosition.x,
+										y:this.defaultConfig.imgPosition.y,
+										w:this.defaultConfig.imgPosition.w,
 										h: 200 * info.height / info.width,
 									},
-									config: this.defaultConfig.img,
+									img: {
+										r: 0,
+										degrees: 0,
+										shadow: false
+									},
+									config: {
+										r:this.defaultConfig.img.r,
+										degrees: this.defaultConfig.img.degrees,
+										shadow: false
+									},
 									isMove: false
 								})
 								this.textActive = -1
@@ -282,7 +300,7 @@
 				if (!this.inputContent) {
 					uni.showModal({
 						title: '提示',
-						content: '这是一个模态弹窗',
+						content: '编辑内容不能为空',
 						showCancel: false,
 						success: function(res) {
 							if (res.confirm) {
@@ -510,6 +528,61 @@
 				if (e.touches[0].clientY < 100) return
 				this.container.h = e.touches[0].clientY
 			},
+			//导出PNG export to png
+			export2png() {
+				let data = []
+				for (let i of this.imageList) {
+					let j = this.px2rpx(i.position.x, i.position.y, i.position.w, i.position.h, i.config.r)
+					console.log(j)
+					data.push({
+						src: i.src,
+						x: j[0],
+						y: j[1],
+						w: j[2],
+						h: j[3],
+						r: j[4],
+						degrees:i.config.degrees,
+						shadow: i.config.shadow
+					})
+				}
+				let data2 = []
+				for (let i of this.textList) {
+					let j = this.px2rpx(i.position.x, i.position.y, i.position.w, i.config.lineHeight, i.config.size)
+					data.push({
+						content: i.content,
+						x: j[0],
+						y: j[1],
+						w: j[2],
+						lineHeight: j[3],
+						size: j[4],
+						color: i.config.color,
+						weight: i.config.weight ? 'bold' : 'normal',
+						lineThrough: i.config.lineThrough
+					})
+				}
+				this.imageSrc = data
+				console.log(this.imageList, this.textList)
+				this.activeGenerate = true
+				setTimeout(()=>{
+					this.$refs.generate.generate()
+				},1000)
+				// console.log(data, data2)
+			},
+			exportSuccess(url){
+				this.activeGenerate = false
+				uni.previewImage({
+				            urls: [url],
+				            longPressActions: {
+				                itemList: ['发送给朋友', '保存图片', '收藏'],
+				                success: function(data) {
+				                    console.log('选中了第' + (data.tapIndex + 1) + '个按钮,第' + (data.index + 1) + '张图片');
+				                },
+				                fail: function(err) {
+				                    console.log(err.errMsg);
+				                }
+				            }
+				        });
+			}
 		}
 	}
 </script>

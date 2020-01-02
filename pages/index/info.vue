@@ -14,8 +14,7 @@
 					</view>
 				<view class="zx-title">画布模式</view>
 				<view>1、手绘，可选择保存或编辑</view>
-				<view></view>
-				<view></view>
+				<view style="margin-top: 30rpx;color: #999999;">（更多功能等你发掘~）</view>
 			</view>
 			<button class="zx-btn" @tap="handldWin">X</button>
 		</view>
@@ -58,7 +57,7 @@
 			position: absolute;
 			margin: auto;
 			width: 600rpx;
-			height: 1000rpx;
+			height: 720rpx;
 			bottom: 0;
 			top: 0;
 			left: 0;
@@ -68,7 +67,7 @@
 
 			.zx-content {
 				flex: 1;
-				padding: 15rpx 0 30rpx 30rpx;
+				padding: 20rpx 0 30rpx 30rpx;
 
 				.zx-title {
 					font-size: 32rpx;

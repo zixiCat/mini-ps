@@ -108,7 +108,7 @@
 /******/ 		if(installedCssChunks[chunkId]) promises.push(installedCssChunks[chunkId]);
 /******/ 		else if(installedCssChunks[chunkId] !== 0 && cssChunks[chunkId]) {
 /******/ 			promises.push(installedCssChunks[chunkId] = new Promise(function(resolve, reject) {
-/******/ 				var href = "" + ({"pages/index/canvasEdit":"pages/index/canvasEdit","pages/index/fontEdit":"pages/index/fontEdit","pages/index/imgEdit":"pages/index/imgEdit","pages/index/info":"pages/index/info","pages/index/zxColor":"pages/index/zxColor","pages/cart/icon-link":"pages/cart/icon-link","component/item-list":"component/item-list","pages/user/sign":"pages/user/sign","component/comment":"component/comment","component/comment-detail":"component/comment-detail"}[chunkId]||chunkId) + ".wxss";
+/******/ 				var href = "" + ({"pages/index/canvasEdit":"pages/index/canvasEdit","pages/index/fontEdit":"pages/index/fontEdit","pages/index/generateImg":"pages/index/generateImg","pages/index/imgEdit":"pages/index/imgEdit","pages/index/info":"pages/index/info","pages/index/zxColor":"pages/index/zxColor","pages/cart/icon-link":"pages/cart/icon-link","component/item-list":"component/item-list","pages/user/sign":"pages/user/sign","component/comment":"component/comment","component/comment-detail":"component/comment-detail"}[chunkId]||chunkId) + ".wxss";
 /******/ 				var fullhref = __webpack_require__.p + href;
 /******/ 				var existingLinkTags = document.getElementsByTagName("link");
 /******/ 				for(var i = 0; i < existingLinkTags.length; i++) {

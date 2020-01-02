@@ -5,6 +5,7 @@
     "font-edit": "/pages/index/fontEdit",
     "canvas-edit": "/pages/index/canvasEdit",
     "zx-color": "/pages/index/zxColor",
-    "zx-info": "/pages/index/info"
+    "zx-info": "/pages/index/info",
+    "generate-img": "/pages/index/generateImg"
   }
 }

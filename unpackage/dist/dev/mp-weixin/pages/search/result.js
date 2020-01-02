@@ -122,7 +122,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var itemList = function itemList() {return __webpack_require__.e(/*! import() | component/item-list */ "component/item-list").then(__webpack_require__.bind(null, /*! component/item-list.vue */ 305));};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var itemList = function itemList() {return __webpack_require__.e(/*! import() | component/item-list */ "component/item-list").then(__webpack_require__.bind(null, /*! component/item-list.vue */ 312));};var _default =
 
 
 

@@ -90,6 +90,15 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+  var m0 = _vm.px2rpx(_vm.container.h)
+  _vm.$mp.data = Object.assign(
+    {},
+    {
+      $root: {
+        m0: m0
+      }
+    }
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -122,7 +131,10 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var imgEdit = function imgEdit() {return __webpack_require__.e(/*! import() | pages/index/imgEdit */ "pages/index/imgEdit").then(__webpack_require__.bind(null, /*! ./imgEdit.vue */ 264));};var fontEdit = function fontEdit() {return __webpack_require__.e(/*! import() | pages/index/fontEdit */ "pages/index/fontEdit").then(__webpack_require__.bind(null, /*! ./fontEdit.vue */ 269));};var canvasEdit = function canvasEdit() {return Promise.all(/*! import() | pages/index/canvasEdit */[__webpack_require__.e("common/vendor"), __webpack_require__.e("pages/index/canvasEdit")]).then(__webpack_require__.bind(null, /*! ./canvasEdit */ 274));};var zxColor = function zxColor() {return __webpack_require__.e(/*! import() | pages/index/zxColor */ "pages/index/zxColor").then(__webpack_require__.bind(null, /*! ./zxColor */ 284));};var zxInfo = function zxInfo() {return __webpack_require__.e(/*! import() | pages/index/info */ "pages/index/info").then(__webpack_require__.bind(null, /*! ./info */ 291));};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var imgEdit = function imgEdit() {return __webpack_require__.e(/*! import() | pages/index/imgEdit */ "pages/index/imgEdit").then(__webpack_require__.bind(null, /*! ./imgEdit.vue */ 264));};var fontEdit = function fontEdit() {return __webpack_require__.e(/*! import() | pages/index/fontEdit */ "pages/index/fontEdit").then(__webpack_require__.bind(null, /*! ./fontEdit.vue */ 269));};var canvasEdit = function canvasEdit() {return Promise.all(/*! import() | pages/index/canvasEdit */[__webpack_require__.e("common/vendor"), __webpack_require__.e("pages/index/canvasEdit")]).then(__webpack_require__.bind(null, /*! ./canvasEdit */ 274));};var zxColor = function zxColor() {return __webpack_require__.e(/*! import() | pages/index/zxColor */ "pages/index/zxColor").then(__webpack_require__.bind(null, /*! ./zxColor */ 284));};var zxInfo = function zxInfo() {return __webpack_require__.e(/*! import() | pages/index/info */ "pages/index/info").then(__webpack_require__.bind(null, /*! ./info */ 291));};var generateImg = function generateImg() {return __webpack_require__.e(/*! import() | pages/index/generateImg */ "pages/index/generateImg").then(__webpack_require__.bind(null, /*! ./generateImg */ 298));};var _default =
+
+
+
 
 
 
@@ -215,7 +227,8 @@ __webpack_require__.r(__webpack_exports__);
     fontEdit: fontEdit,
     canvasEdit: canvasEdit,
     zxColor: zxColor,
-    zxInfo: zxInfo },
+    zxInfo: zxInfo,
+    generateImg: generateImg },
 
   data: function data() {
     return {
@@ -227,6 +240,7 @@ __webpack_require__.r(__webpack_exports__);
       curColor: '#000',
       isShow: true,
       timer: null,
+      activeGenerate: false,
       btnType: {
         font: {
           range1: '字体大小',
@@ -290,7 +304,10 @@ __webpack_require__.r(__webpack_exports__);
       imgConfig: {},
       fontConfig: {},
       canvasConfig: {},
-      inputContent: '' };
+      inputContent: '',
+      imageSrc: null,
+      textSrc: null };
+
 
   },
   watch: {
@@ -325,10 +342,10 @@ __webpack_require__.r(__webpack_exports__);
       }
     } },
 
-  onLoad: function onLoad() {
-    this.imgConfig = this.defaultConfig.img;
-    this.fontConfig = this.defaultConfig.font;
-    this.canvasConfig = this.defaultConfig.canvas;
+  onReady: function onReady() {
+    this.imgConfig = JSON.parse(JSON.stringify(this.defaultConfig.img));
+    this.fontConfig = JSON.parse(JSON.stringify(this.defaultConfig.font));
+    this.canvasConfig = JSON.parse(JSON.stringify(this.defaultConfig.canvas));
     this.k = uni.getSystemInfoSync().screenWidth / 750;
     this.setContainerW();
   },
@@ -339,7 +356,7 @@ __webpack_require__.r(__webpack_exports__);
       return arguments[0] / this.k;
       var params = [];var _iteratorNormalCompletion = true;var _didIteratorError = false;var _iteratorError = undefined;try {
         for (var _iterator = arguments[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {var i = _step.value;
-          params.push(i / this.k);
+          params.push(i / this.k || 0);
         }} catch (err) {_didIteratorError = true;_iteratorError = err;} finally {try {if (!_iteratorNormalCompletion && _iterator.return != null) {_iterator.return();}} finally {if (_didIteratorError) {throw _iteratorError;}}}
       return params;
     },
@@ -348,7 +365,7 @@ __webpack_require__.r(__webpack_exports__);
       return arguments[0] * this.k;
       var params = [];var _iteratorNormalCompletion2 = true;var _didIteratorError2 = false;var _iteratorError2 = undefined;try {
         for (var _iterator2 = arguments[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {var i = _step2.value;
-          params.push(i * this.k);
+          params.push(i * this.k || 0);
         }} catch (err) {_didIteratorError2 = true;_iteratorError2 = err;} finally {try {if (!_iteratorNormalCompletion2 && _iterator2.return != null) {_iterator2.return();}} finally {if (_didIteratorError2) {throw _iteratorError2;}}}
       return params;
     },
@@ -372,7 +389,6 @@ __webpack_require__.r(__webpack_exports__);
     getColor: function getColor(e) {
       this.curColor = e;
       this.$refs.font.handleFontColor(e);
-      this.$refs.canvas.handleCanvasColor(e);
       this.canvasConfig.color = e;
     },
     //上传图片 upload img
@@ -386,11 +402,22 @@ __webpack_require__.r(__webpack_exports__);
             success: function success(info) {
               _this.imageList.push({
                 src: res.tempFilePaths[0],
-                position: _objectSpread({},
-                _this.defaultConfig.imgPosition, {
-                  h: 200 * info.height / info.width }),
+                position: {
+                  x: _this.defaultConfig.imgPosition.x,
+                  y: _this.defaultConfig.imgPosition.y,
+                  w: _this.defaultConfig.imgPosition.w,
+                  h: 200 * info.height / info.width },
 
-                config: _this.defaultConfig.img,
+                img: {
+                  r: 0,
+                  degrees: 0,
+                  shadow: false },
+
+                config: {
+                  r: _this.defaultConfig.img.r,
+                  degrees: _this.defaultConfig.img.degrees,
+                  shadow: false },
+
                 isMove: false });
 
               _this.textActive = -1;
@@ -406,7 +433,7 @@ __webpack_require__.r(__webpack_exports__);
       if (!this.inputContent) {
         uni.showModal({
           title: '提示',
-          content: '这是一个模态弹窗',
+          content: '编辑内容不能为空',
           showCancel: false,
           success: function success(res) {
             if (res.confirm) {
@@ -633,6 +660,61 @@ __webpack_require__.r(__webpack_exports__);
     canvasAdjustMove: function canvasAdjustMove(e) {
       if (e.touches[0].clientY < 100) return;
       this.container.h = e.touches[0].clientY;
+    },
+    //导出PNG export to png
+    export2png: function export2png() {var _this4 = this;
+      var data = [];var _iteratorNormalCompletion3 = true;var _didIteratorError3 = false;var _iteratorError3 = undefined;try {
+        for (var _iterator3 = this.imageList[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {var i = _step3.value;
+          var j = this.px2rpx(i.position.x, i.position.y, i.position.w, i.position.h, i.config.r);
+          console.log(j);
+          data.push({
+            src: i.src,
+            x: j[0],
+            y: j[1],
+            w: j[2],
+            h: j[3],
+            r: j[4],
+            degrees: i.config.degrees,
+            shadow: i.config.shadow });
+
+        }} catch (err) {_didIteratorError3 = true;_iteratorError3 = err;} finally {try {if (!_iteratorNormalCompletion3 && _iterator3.return != null) {_iterator3.return();}} finally {if (_didIteratorError3) {throw _iteratorError3;}}}
+      var data2 = [];var _iteratorNormalCompletion4 = true;var _didIteratorError4 = false;var _iteratorError4 = undefined;try {
+        for (var _iterator4 = this.textList[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {var _i = _step4.value;
+          var _j = this.px2rpx(_i.position.x, _i.position.y, _i.position.w, _i.config.lineHeight, _i.config.size);
+          data.push({
+            content: _i.content,
+            x: _j[0],
+            y: _j[1],
+            w: _j[2],
+            lineHeight: _j[3],
+            size: _j[4],
+            color: _i.config.color,
+            weight: _i.config.weight ? 'bold' : 'normal',
+            lineThrough: _i.config.lineThrough });
+
+        }} catch (err) {_didIteratorError4 = true;_iteratorError4 = err;} finally {try {if (!_iteratorNormalCompletion4 && _iterator4.return != null) {_iterator4.return();}} finally {if (_didIteratorError4) {throw _iteratorError4;}}}
+      this.imageSrc = data;
+      console.log(this.imageList, this.textList);
+      this.activeGenerate = true;
+      setTimeout(function () {
+        _this4.$refs.generate.generate();
+      }, 1000);
+      // console.log(data, data2)
+    },
+    exportSuccess: function exportSuccess(url) {
+      this.activeGenerate = false;
+      uni.previewImage({
+        urls: [url],
+        longPressActions: {
+          itemList: ['发送给朋友', '保存图片', '收藏'],
+          success: function success(data) {
+            console.log('选中了第' + (data.tapIndex + 1) + '个按钮,第' + (data.index + 1) + '张图片');
+          },
+          fail: function fail(err) {
+            console.log(err.errMsg);
+          } } });
+
+
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

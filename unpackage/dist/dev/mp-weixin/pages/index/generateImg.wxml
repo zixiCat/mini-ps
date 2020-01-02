@@ -1,0 +1,1 @@
+<view><canvas style="{{'width:'+(canvasW+'rpx')+';'+('height:'+(canvasH+'rpx')+';')}}" canvas-id="generate"></canvas></view>

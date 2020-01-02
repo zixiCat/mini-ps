@@ -110,36 +110,42 @@
 					content: '是否将当前画布内容保存至本地',
 					success: res => {
 						if (res.confirm) {
+							setTimeout(()=>{
 							this.getCanvasImage('save')
+							},300)
 						}
 					}
 				});
 			},
 			confirm() {
+				setTimeout(()=>{
 				this.getCanvasImage('confirm')
+				},300)
 			},
 			getCanvasImage(type) {
 				this.copyClip.x = Math.min(...this.clipX) - 5
 				this.copyClip.y = Math.min(...this.clipY) - 5
 				this.copyClip.w = Math.max(...this.clipX) - this.copyClip.x + 5
 				this.copyClip.h = Math.max(...this.clipY) - this.copyClip.y + 5
-				this.ctx.draw(true)
-				uni.canvasToTempFilePath({
-					x: this.copyClip.x,
-					y: this.copyClip.y,
-					width: this.copyClip.w,
-					height: this.copyClip.h,
-					canvasId: 'canvas',
-					success: res => {
-						if (type === 'save') {
-							uni.saveImageToPhotosAlbum({
-								filePath: res.tempFilePath
-							});
-						} else {
-							this.$emit('handleCanvasImage', res.tempFilePath, this.copyClip)
-						}
-					},
-				}, this);
+				this.ctx.draw(true,res=>{
+					uni.canvasToTempFilePath({
+						x: this.copyClip.x,
+						y: this.copyClip.y,
+						width: this.copyClip.w,
+						height: this.copyClip.h,
+						canvasId: 'canvas',
+						success: res => {
+							if (type === 'save') {
+								uni.saveImageToPhotosAlbum({
+									filePath: res.tempFilePath
+								});
+							} else {
+								this.$emit('handleCanvasImage', res.tempFilePath, this.copyClip)
+							}
+						},
+					}, this);
+				})
+			
 			}
 		}
 	}

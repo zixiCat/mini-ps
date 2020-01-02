@@ -82,5 +82,6 @@
       "desc": "位置信息将用于为您推荐附近商家"
     }
   },
-  "usingComponents": {}
+  "usingComponents": {},
+  "sitemapLocation": "sitemap20.json"
 }
