@@ -105,15 +105,15 @@
 			handleFontCenter(containerW){
 				this.value[this.active].position.x = (containerW - this.value[this.active].position.w) / 2
 			},
-			handleFontWeight(){
-				this.value[this.active].config.weight = !this.value[this.active].config.weight
+			handleFontWeight(val){
+				this.value[this.active].config.weight = val
 			},
 			handleFontColor(val){
 				if(this.active<0) return
 				this.value[this.active].config.color = val
 			},
-			handleFontLineThrough(){
-				this.value[this.active].config.lineThrough = !this.value[this.active].config.lineThrough
+			handleFontLineThrough(val){
+				this.value[this.active].config.lineThrough = val
 			}
 		}
 	}

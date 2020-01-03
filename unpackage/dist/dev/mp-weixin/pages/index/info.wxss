@@ -41,7 +41,7 @@
     position: absolute;
     margin: auto;
     width: 600rpx;
-    height: 720rpx;
+    height: 900rpx;
     bottom: 0;
     top: 0;
     left: 0;
@@ -53,7 +53,7 @@
       -webkit-box-flex: 1;
       -webkit-flex: 1;
               flex: 1;
-      padding: 20rpx 0 30rpx 30rpx;
+      padding: 30rpx 0 40rpx 30rpx;
 }
 .zx-info .zx-dialog .zx-content .zx-title {
         font-size: 32rpx;

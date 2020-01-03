@@ -6,7 +6,7 @@
 		width: item.position.w+'px',
 		height:item.position.h+'px',
 	    borderRadius:item.config.r+'px',
-		transform: 'rotate('+item.config.degrees+'deg)',
+		transform: 'scaleX('+(item.config.mirror? -1:1)+') rotate('+item.config.degrees+'deg)',
 		boxShadow:item.config.shadow?'0 2px 12px 0 rgba(0, 0, 0, 0.2)':'',
 		}"
 		 @touchstart='touchStart($event,item,index)' @longpress='longPress($event,item,index)' @touchmove.stop='touchMove($event,item,index)'
@@ -126,8 +126,11 @@
 			handleImgDegrees(val) {
 				this.value[this.active].config.degrees = val
 			},
-			handleImgShadow() {
-				this.value[this.active].config.shadow = !this.value[this.active].config.shadow
+			handleImgShadow(val) {
+				this.value[this.active].config.shadow = val
+			},
+			handleImgMirror(val) {
+				this.value[this.active].config.mirror = val
 			},
 			handleImgCenter(containerW) {
 				this.value[this.active].position.x = (containerW - this.value[this.active].position.w) / 2

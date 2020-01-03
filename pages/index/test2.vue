@@ -18,9 +18,10 @@
 						</button>
 					</view>
 					<view>
-						<button class="zx-btn" style="width: 80rpx;" @tap="export2png">导出</button>
+						<button v-if="editType!=='canvas'" class="zx-btn" style="width: 80rpx;" @tap="export2png">导出</button>
 						<button v-if="editType!=='img'" class="zx-btn" :style="{backgroundColor: curColor}" @click="tapBtn3"></button>
-						<button v-if="editType==='img'" class="zx-btn" sclass="zx-btn" :class="imgConfig.shadow?'zx-select':''" @tap="tapBtn0">阴</button>
+						<button v-if="editType==='img'" class="zx-btn" :class="imgConfig.shadow&&editType==='img'?'zx-select':''" @tap="tapTopBtn0">影</button>
+						<button v-if="editType==='img'" class="zx-btn" :class="imgConfig.mirror&&editType==='img'?'zx-select':''" @tap="tapTopBtn1">镜</button>
 						<button class="zx-btn" @tap="info">!</button>
 						<button class="zx-btn" @tap="close">X</button>
 					</view>
@@ -59,11 +60,11 @@
 					</view>
 					<view class="zx-operate">
 						<button class="zx-btn" @tap="tapBtn1">{{btnType[editType].btn1}}</button>
-						<button class="zx-btn" :class="fontConfig.weight?'zx-select':''" @tap="tapBtn2">
+						<button class="zx-btn" :class="fontConfig.weight&&editType==='font'?'zx-select':''" @tap="tapBtn2">
 							{{btnType[editType].btn2}}
 						</button>
 						<button class="zx-btn" @tap="tapBtn3">{{btnType[editType].btn3}}</button>
-						<button class="zx-btn" :class="fontConfig.lineThrough?'zx-select':''" @tap="tapBtn4">{{btnType[editType].btn4}}
+						<button class="zx-btn" :class="fontConfig.lineThrough&&editType==='font'?'zx-select':''" @tap="tapBtn4">{{btnType[editType].btn4}}
 						</button>
 					</view>
 				</view>
@@ -76,7 +77,8 @@
 			</view>
 		</view>
 		<zx-info ref="info"></zx-info>
-		<generate-img v-if="activeGenerate" :img="imageSrc" :canvasH="px2rpx(container.h)" ref="generate" @exportSuccess="exportSuccess"></generate-img>
+		<generate-img v-if="activeGenerate" :img="imageSrc" :text="textSrc" :canvasH="(px2rpx(container.h)-30)" ref="generate"
+		 @exportSuccess="exportSuccess"></generate-img>
 	</view>
 </template>
 
@@ -107,7 +109,7 @@
 				curColor: '#000',
 				isShow: true,
 				timer: null,
-				activeGenerate:false,
+				activeGenerate: false,
 				btnType: {
 					font: {
 						range1: '字体大小',
@@ -148,7 +150,8 @@
 					img: {
 						r: 0,
 						degrees: 0,
-						shadow: false
+						shadow: false,
+						mirror: false,
 					},
 					font: {
 						lineHeight: 14,
@@ -172,9 +175,9 @@
 				fontConfig: {},
 				canvasConfig: {},
 				inputContent: '',
-				imageSrc:null,
-				textSrc:null
-		
+				imageSrc: null,
+				textSrc: null
+
 			}
 		},
 		watch: {
@@ -184,6 +187,7 @@
 						this.imgActive = -1
 						this.editType = 'font'
 					}
+					console.log(this.textList[val].config, val + 'val')
 					this.fontConfig = this.textList[val].config;
 					this.inputContent = this.textList[val].content
 				} else if (this.imgActive === -1 && this.textActive === -1 && this.editType !== 'canvas') {
@@ -210,9 +214,9 @@
 			}
 		},
 		onReady() {
-			this.imgConfig =  JSON.parse(JSON.stringify(this.defaultConfig.img))   
-			this.fontConfig =JSON.parse(JSON.stringify(this.defaultConfig.font)) 
-			this.canvasConfig =JSON.parse(JSON.stringify(this.defaultConfig.canvas)) 
+			this.imgConfig = JSON.parse(JSON.stringify(this.defaultConfig.img))
+			this.fontConfig = JSON.parse(JSON.stringify(this.defaultConfig.font))
+			this.canvasConfig = JSON.parse(JSON.stringify(this.defaultConfig.canvas))
 			this.k = uni.getSystemInfoSync().screenWidth / 750
 			this.setContainerW()
 		},
@@ -223,7 +227,7 @@
 					return arguments[0] / this.k
 				let params = []
 				for (let i of arguments) {
-					params.push((i / this.k)||0)
+					params.push((i / this.k) || 0)
 				}
 				return params
 			},
@@ -232,7 +236,7 @@
 					return arguments[0] * this.k
 				let params = []
 				for (let i of arguments) {
-					params.push((i * this.k)||0)
+					params.push((i * this.k) || 0)
 				}
 				return params
 			},
@@ -270,20 +274,11 @@
 								this.imageList.push({
 									src: res.tempFilePaths[0],
 									position: {
-										x:this.defaultConfig.imgPosition.x,
-										y:this.defaultConfig.imgPosition.y,
-										w:this.defaultConfig.imgPosition.w,
+										...this.defaultConfig.imgPosition,
 										h: 200 * info.height / info.width,
 									},
-									img: {
-										r: 0,
-										degrees: 0,
-										shadow: false
-									},
 									config: {
-										r:this.defaultConfig.img.r,
-										degrees: this.defaultConfig.img.degrees,
-										shadow: false
+										...this.defaultConfig.img
 									},
 									isMove: false
 								})
@@ -434,12 +429,15 @@
 				clearInterval(this.timer)
 				this.timer = null
 			},
-			tapBtn0() {
-				if (this.editType === 'img') {
-					//设置阴影 set shadow
-					this.imgConfig.shadow = !this.imgConfig.shadow
-					this.$refs.img.handleImgShadow()
-				}
+			tapTopBtn0() {
+				//设置阴影 set shadow
+				this.imgConfig.shadow = !this.imgConfig.shadow
+				this.$refs.img.handleImgShadow(this.imgConfig.shadow)
+			},
+			tapTopBtn1() {
+				//设置镜像 set mirror
+				this.imgConfig.mirror = !this.imgConfig.mirror
+				this.$refs.img.handleImgMirror(this.imgConfig.mirror)
 			},
 			tapBtn1() {
 				switch (this.editType) {
@@ -468,7 +466,7 @@
 					case 'font':
 						//加粗 font weight
 						this.fontConfig.weight = !this.fontConfig.weight
-						this.$refs.font.handleFontWeight()
+						this.$refs.font.handleFontWeight(this.fontConfig.weight)
 						break;
 						//保存本地 save to local
 					case 'canvas':
@@ -504,7 +502,7 @@
 					case 'font':
 						//贯穿 through
 						this.fontConfig.lineThrough = !this.fontConfig.lineThrough
-						this.$refs.font.handleFontLineThrough()
+						this.$refs.font.handleFontLineThrough(this.fontConfig.lineThrough)
 						break;
 					case 'canvas':
 						this.$refs.canvas.confirm()
@@ -530,10 +528,13 @@
 			},
 			//导出PNG export to png
 			export2png() {
+				uni.showLoading({
+					mask:true,
+				    title: '正在导出'
+				});
 				let data = []
 				for (let i of this.imageList) {
 					let j = this.px2rpx(i.position.x, i.position.y, i.position.w, i.position.h, i.config.r)
-					console.log(j)
 					data.push({
 						src: i.src,
 						x: j[0],
@@ -541,18 +542,19 @@
 						w: j[2],
 						h: j[3],
 						r: j[4],
-						degrees:i.config.degrees,
-						shadow: i.config.shadow
+						degrees: i.config.degrees,
+						shadow: i.config.shadow,
+						mirror: i.config.mirror
 					})
 				}
 				let data2 = []
 				for (let i of this.textList) {
 					let j = this.px2rpx(i.position.x, i.position.y, i.position.w, i.config.lineHeight, i.config.size)
-					data.push({
+					data2.push({
 						content: i.content,
 						x: j[0],
 						y: j[1],
-						w: j[2],
+						w: j[2] - 60, //元素padding为30rpx padding of the element is 30rpx
 						lineHeight: j[3],
 						size: j[4],
 						color: i.config.color,
@@ -561,27 +563,28 @@
 					})
 				}
 				this.imageSrc = data
-				console.log(this.imageList, this.textList)
+				this.textSrc = data2
 				this.activeGenerate = true
-				setTimeout(()=>{
+				setTimeout(() => {
 					this.$refs.generate.generate()
-				},1000)
-				// console.log(data, data2)
+				}, 600)
 			},
-			exportSuccess(url){
+			exportSuccess(url) {
+				uni.hideLoading()
 				this.activeGenerate = false
 				uni.previewImage({
-				            urls: [url],
-				            longPressActions: {
-				                itemList: ['发送给朋友', '保存图片', '收藏'],
-				                success: function(data) {
-				                    console.log('选中了第' + (data.tapIndex + 1) + '个按钮,第' + (data.index + 1) + '张图片');
-				                },
-				                fail: function(err) {
-				                    console.log(err.errMsg);
-				                }
-				            }
-				        });
+					urls: [url],
+					longPressActions: {
+						itemList: ['发送给朋友', '保存图片', '收藏'],
+						fail: err => {
+							uni.showModal({
+								title: '错误提示',
+								showCancel: false,
+								content: err.errMsg
+							});
+						}
+					}
+				});
 			}
 		}
 	}

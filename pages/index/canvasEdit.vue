@@ -43,12 +43,12 @@
 			drawing() {
 				this.ctx = uni.createCanvasContext('canvas', this);
 				this.ctx.setLineCap('round')
-				this.handleCanvasColor(this.value.color)
 			},
 			handleCanvasColor(val){
 				this.ctx.setStrokeStyle(val)
 			},
 			touchStart(e) {
+				this.handleCanvasColor(this.value.color)
 				this.ctx.beginPath()
 				this.lineWidth = this.value.lineWidth
 				this.k = this.value.lineWidth > 3 ? 0.3 : 0.2
@@ -106,8 +106,7 @@
 			},
 			save() {
 				uni.showModal({
-					title: '提示',
-					content: '是否将当前画布内容保存至本地',
+					content: '是否将当前画布(不含图片和文字)内容保存至本地',
 					success: res => {
 						if (res.confirm) {
 							setTimeout(()=>{

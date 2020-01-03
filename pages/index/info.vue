@@ -1,5 +1,5 @@
 <template>
-	<view class="zx-info" :class="active?'show':'hide'">
+	<view class="zx-info" :class="active?'show':'hide'" @tap="handldWin">
 		<view class="zx-dialog">
 			<view class="zx-content">
 				<view class="zx-title">文本/图片模式</view>
@@ -14,9 +14,12 @@
 					</view>
 				<view class="zx-title">画布模式</view>
 				<view>1、手绘，可选择保存或编辑</view>
-				<view style="margin-top: 30rpx;color: #999999;">（更多功能等你发掘~）</view>
+				<view class="zx-title" style="margin-top: 20rpx;">导出</view>
+				<view>1、导出的图片为PNG格式</view>
+				<view>2、导出后长按即可保存/分享/收藏</view>
+				<view style="margin-top: 30rpx;color: #999999;">（更多功能等你发现~）</view>
 			</view>
-			<button class="zx-btn" @tap="handldWin">X</button>
+			<!-- <button class="zx-btn" @tap="handldWin">X</button> -->
 		</view>
 	</view>
 	</view>
@@ -26,7 +29,7 @@
 	export default {
 		data() {
 			return {
-				active: false,
+				active: true,
 			}
 		},
 		methods: {
@@ -57,7 +60,7 @@
 			position: absolute;
 			margin: auto;
 			width: 600rpx;
-			height: 720rpx;
+			height: 900rpx;
 			bottom: 0;
 			top: 0;
 			left: 0;
@@ -67,7 +70,7 @@
 
 			.zx-content {
 				flex: 1;
-				padding: 20rpx 0 30rpx 30rpx;
+				padding: 30rpx 0 40rpx 30rpx;
 
 				.zx-title {
 					font-size: 32rpx;
