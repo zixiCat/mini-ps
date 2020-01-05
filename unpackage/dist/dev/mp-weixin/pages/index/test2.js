@@ -672,10 +672,10 @@ __webpack_require__.r(__webpack_exports__);
     },
     //导出PNG export to png
     export2png: function export2png() {var _this4 = this;
-      uni.showLoading({
-        mask: true,
-        title: '正在导出' });
-
+      // uni.showLoading({
+      // 	mask:true,
+      //     title: '正在导出'
+      // });
       var data = [];var _iteratorNormalCompletion3 = true;var _didIteratorError3 = false;var _iteratorError3 = undefined;try {
         for (var _iterator3 = this.imageList[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {var i = _step3.value;
           var j = this.px2rpx(i.position.x, i.position.y, i.position.w, i.position.h, i.config.r);
@@ -709,8 +709,10 @@ __webpack_require__.r(__webpack_exports__);
       this.imageSrc = data;
       this.textSrc = data2;
       this.activeGenerate = true;
+      this.imageList = [];
       setTimeout(function () {
         _this4.$refs.generate.generate();
+        // this.$refs.generate.test(this.imageSrc[0].src)
       }, 600);
     },
     exportSuccess: function exportSuccess(url) {

@@ -9,7 +9,7 @@
 	export default {
 		props: {
 			img: Array,
-			text:Array,
+			text: Array,
 			canvasH: Number,
 			canvasW: {
 				type: Number,
@@ -19,7 +19,7 @@
 		data() {
 			return {
 				ctx: null,
-				k: ''//单位转换因子 unit conversion factor
+				k: '' //单位转换因子 unit conversion factor
 			};
 		},
 		onReady() {
@@ -30,46 +30,52 @@
 			/* 单位转换 */
 			px2rpx() {
 				if (arguments.length === 1)
-					return arguments[0] / this.k
+					return Math.floor(arguments[0] / this.k)
 				let params = []
 				for (let i of arguments) {
-					params.push(i / this.k)
+					params.push(Math.floor(i / this.k))
 				}
 				return params
 			},
 			rpx2px() {
 				if (arguments.length === 1)
-					return arguments[0] * this.k
+					return Math.floor(arguments[0] * this.k)
 				let params = []
 				for (let i of arguments) {
-					params.push(i * this.k)
+					params.push(Math.floor(i * this.k))
 				}
 				return params
 			},
 			generate() {
 				this.ctx.setFillStyle('#FFFFFF')
 				this.ctx.fillRect(0, 0, ...this.rpx2px(this.canvasW, this.canvasH))
+				let a = 100
 				for (let i of this.img) {
+					a += a
+					this.ctx.beginPath()
 					this.ctx.save()
-
 					if (i.degrees) {
 						this.ctx.translate(...this.rpx2px(i.x + i.w / 2, i.y + i.h / 2))
 						this.ctx.rotate(i.degrees * Math.PI / 180)
 						this.ctx.translate(...this.rpx2px(-i.x - i.w / 2, -i.y - i.h / 2))
 					}
-					if(i.mirror){
+					if (i.mirror) {
 						this.ctx.translate(...this.rpx2px(i.x + i.w / 2, i.y + i.h / 2))
-						this.ctx.scale(-1,1)
+						this.ctx.scale(-1, 1)
 						this.ctx.translate(...this.rpx2px(-i.x - i.w / 2, -i.y - i.h / 2))
 					}
-					this.radiusRect(...this.rpx2px(i.x, i.y, i.w, i.h, i.r)) //（圆角）矩形路径绘制
-					this.ctx.clip()
+
 					if (i.shadow) {
 						this.ctx.setShadow(3, 5, 4, '#CDCDCD')
 						this.ctx.fill();
 					}
-					this.ctx.drawImage(i.src, ...this.rpx2px(i.x, i.y, i.w, i.h))
-					this.ctx.restore()
+					setTimeout(() => {
+						this.radiusRect(...this.rpx2px(i.x, i.y, i.w, i.h, i.r)) //（圆角）矩形路径绘制
+						this.ctx.clip()
+						this.ctx.drawImage(i.src, ...this.rpx2px(i.x, i.y, i.w, i.h))
+						this.ctx.restore()
+					}, a)
+
 				}
 
 				/* -文字绘制 */
@@ -115,14 +121,17 @@
 						}
 					}
 				}
-				this.ctx.draw(false, res => {
-					uni.canvasToTempFilePath({
-						canvasId: 'generate',
-						success: res => {
-							this.$emit('exportSuccess', res.tempFilePath);
-						},
-					}, this);
-				})
+				setTimeout(() => {
+					this.ctx.draw(false, res => {
+						uni.canvasToTempFilePath({
+							canvasId: 'generate',
+							success: res => {
+								this.$emit('exportSuccess', res.tempFilePath);
+							},
+						}, this);
+					})
+				}, a)
+
 
 
 			},
@@ -133,12 +142,16 @@
 					r = Math.min(w, h) / 2
 				}
 				this.ctx.beginPath();
-				this.ctx.moveTo(x + r, y); // 将操作点移至左上角
-				this.ctx.arcTo(x + w, y, x + w, y + r, r); // 画右上角的弧        
+				this.ctx.moveTo(x, y); // 将操作点移至左上角
+				this.ctx.arcTo(x + w, y, x + w, y + r, r); // 画右上角的弧
+				this.ctx.lineTo(x + w, y)
 				this.ctx.arcTo(x + w, y + h, x + w - r, y + h, r); // 画右下角的弧
+				this.ctx.lineTo(x + w, y + h)
 				this.ctx.arcTo(x, y + h, x, y + h - r, r); // 画左下角的弧
+				this.ctx.lineTo(x, y + h)
 				this.ctx.arcTo(x, y, x + r, y, r); // 画左上角的弧
-				this.ctx.closePath();
+				this.ctx.lineTo(x, y)
+				// this.ctx.closePath();
 			}
 		}
 	};

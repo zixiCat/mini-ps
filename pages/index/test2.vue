@@ -528,10 +528,10 @@
 			},
 			//导出PNG export to png
 			export2png() {
-				uni.showLoading({
-					mask:true,
-				    title: '正在导出'
-				});
+				// uni.showLoading({
+				// 	mask:true,
+				//     title: '正在导出'
+				// });
 				let data = []
 				for (let i of this.imageList) {
 					let j = this.px2rpx(i.position.x, i.position.y, i.position.w, i.position.h, i.config.r)
@@ -565,8 +565,10 @@
 				this.imageSrc = data
 				this.textSrc = data2
 				this.activeGenerate = true
+				this.imageList=[]
 				setTimeout(() => {
 					this.$refs.generate.generate()
+					// this.$refs.generate.test(this.imageSrc[0].src)
 				}, 600)
 			},
 			exportSuccess(url) {

@@ -5,14 +5,26 @@
 	},
 	"setting": {
 		"urlCheck": true,
-		"es6": true,
+		"es6": false,
 		"postcss": false,
 		"minified": false,
-		"checkSiteMap": false
+		"newFeature": true,
+		"coverView": true,
+		"autoAudits": false,
+		"showShadowRootInWxmlPanel": true,
+		"scopeDataCheck": false,
+		"checkInvalidKey": true,
+		"checkSiteMap": false,
+		"uploadWithSourceMap": true,
+		"babelSetting": {
+			"ignore": [],
+			"disablePlugins": [],
+			"outputPath": ""
+		}
 	},
 	"compileType": "miniprogram",
 	"libVersion": "2.9.2",
-	"appid": "wx5da37183f70a5fa9",
+	"appid": "wx69b840d08d7ccfb0",
 	"projectname": "WasteNya",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},

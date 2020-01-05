@@ -126,25 +126,22 @@
 				this.copyClip.y = Math.min(...this.clipY) - 5
 				this.copyClip.w = Math.max(...this.clipX) - this.copyClip.x + 5
 				this.copyClip.h = Math.max(...this.clipY) - this.copyClip.y + 5
-				this.ctx.draw(true,res=>{
-					uni.canvasToTempFilePath({
-						x: this.copyClip.x,
-						y: this.copyClip.y,
-						width: this.copyClip.w,
-						height: this.copyClip.h,
-						canvasId: 'canvas',
-						success: res => {
-							if (type === 'save') {
-								uni.saveImageToPhotosAlbum({
-									filePath: res.tempFilePath
-								});
-							} else {
-								this.$emit('handleCanvasImage', res.tempFilePath, this.copyClip)
-							}
-						},
-					}, this);
-				})
-			
+				uni.canvasToTempFilePath({
+					x: this.copyClip.x,
+					y: this.copyClip.y,
+					width: this.copyClip.w,
+					height: this.copyClip.h,
+					canvasId: 'canvas',
+					success: res => {
+						if (type === 'save') {
+							uni.saveImageToPhotosAlbum({
+								filePath: res.tempFilePath
+							});
+						} else {
+							this.$emit('handleCanvasImage', res.tempFilePath, this.copyClip)
+						}
+					},
+				}, this)
 			}
 		}
 	}

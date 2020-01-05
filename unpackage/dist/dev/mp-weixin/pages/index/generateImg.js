@@ -146,99 +146,108 @@ __webpack_require__.r(__webpack_exports__);
     /* 单位转换 */
     px2rpx: function px2rpx() {
       if (arguments.length === 1)
-      return arguments[0] / this.k;
+      return Math.floor(arguments[0] / this.k);
       var params = [];var _iteratorNormalCompletion = true;var _didIteratorError = false;var _iteratorError = undefined;try {
         for (var _iterator = arguments[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {var i = _step.value;
-          params.push(i / this.k);
+          params.push(Math.floor(i / this.k));
         }} catch (err) {_didIteratorError = true;_iteratorError = err;} finally {try {if (!_iteratorNormalCompletion && _iterator.return != null) {_iterator.return();}} finally {if (_didIteratorError) {throw _iteratorError;}}}
       return params;
     },
     rpx2px: function rpx2px() {
       if (arguments.length === 1)
-      return arguments[0] * this.k;
+      return Math.floor(arguments[0] * this.k);
       var params = [];var _iteratorNormalCompletion2 = true;var _didIteratorError2 = false;var _iteratorError2 = undefined;try {
         for (var _iterator2 = arguments[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {var i = _step2.value;
-          params.push(i * this.k);
+          params.push(Math.floor(i * this.k));
         }} catch (err) {_didIteratorError2 = true;_iteratorError2 = err;} finally {try {if (!_iteratorNormalCompletion2 && _iterator2.return != null) {_iterator2.return();}} finally {if (_didIteratorError2) {throw _iteratorError2;}}}
       return params;
     },
     generate: function generate() {var _this$ctx,_this = this;
       this.ctx.setFillStyle('#FFFFFF');
-      (_this$ctx = this.ctx).fillRect.apply(_this$ctx, [0, 0].concat(_toConsumableArray(this.rpx2px(this.canvasW, this.canvasH))));var _iteratorNormalCompletion3 = true;var _didIteratorError3 = false;var _iteratorError3 = undefined;try {
-        for (var _iterator3 = this.img[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {var _this$ctx6;var i = _step3.value;
-          this.ctx.save();
-
+      (_this$ctx = this.ctx).fillRect.apply(_this$ctx, [0, 0].concat(_toConsumableArray(this.rpx2px(this.canvasW, this.canvasH))));
+      var a = 100;var _iteratorNormalCompletion3 = true;var _didIteratorError3 = false;var _iteratorError3 = undefined;try {var _loop = function _loop() {var
+          i = _step3.value;
+          a += a;
+          _this.ctx.beginPath();
+          _this.ctx.save();
           if (i.degrees) {var _this$ctx2, _this$ctx3;
-            (_this$ctx2 = this.ctx).translate.apply(_this$ctx2, _toConsumableArray(this.rpx2px(i.x + i.w / 2, i.y + i.h / 2)));
-            this.ctx.rotate(i.degrees * Math.PI / 180);
-            (_this$ctx3 = this.ctx).translate.apply(_this$ctx3, _toConsumableArray(this.rpx2px(-i.x - i.w / 2, -i.y - i.h / 2)));
+            (_this$ctx2 = _this.ctx).translate.apply(_this$ctx2, _toConsumableArray(_this.rpx2px(i.x + i.w / 2, i.y + i.h / 2)));
+            _this.ctx.rotate(i.degrees * Math.PI / 180);
+            (_this$ctx3 = _this.ctx).translate.apply(_this$ctx3, _toConsumableArray(_this.rpx2px(-i.x - i.w / 2, -i.y - i.h / 2)));
           }
           if (i.mirror) {var _this$ctx4, _this$ctx5;
-            (_this$ctx4 = this.ctx).translate.apply(_this$ctx4, _toConsumableArray(this.rpx2px(i.x + i.w / 2, i.y + i.h / 2)));
-            this.ctx.scale(-1, 1);
-            (_this$ctx5 = this.ctx).translate.apply(_this$ctx5, _toConsumableArray(this.rpx2px(-i.x - i.w / 2, -i.y - i.h / 2)));
+            (_this$ctx4 = _this.ctx).translate.apply(_this$ctx4, _toConsumableArray(_this.rpx2px(i.x + i.w / 2, i.y + i.h / 2)));
+            _this.ctx.scale(-1, 1);
+            (_this$ctx5 = _this.ctx).translate.apply(_this$ctx5, _toConsumableArray(_this.rpx2px(-i.x - i.w / 2, -i.y - i.h / 2)));
           }
-          this.radiusRect.apply(this, _toConsumableArray(this.rpx2px(i.x, i.y, i.w, i.h, i.r))); //（圆角）矩形路径绘制
-          this.ctx.clip();
+
           if (i.shadow) {
-            this.ctx.setShadow(3, 5, 4, '#CDCDCD');
-            this.ctx.fill();
+            _this.ctx.setShadow(3, 5, 4, '#CDCDCD');
+            _this.ctx.fill();
           }
-          (_this$ctx6 = this.ctx).drawImage.apply(_this$ctx6, [i.src].concat(_toConsumableArray(this.rpx2px(i.x, i.y, i.w, i.h))));
-          this.ctx.restore();
+          setTimeout(function () {var _this$ctx6;
+            _this.radiusRect.apply(_this, _toConsumableArray(_this.rpx2px(i.x, i.y, i.w, i.h, i.r))); //（圆角）矩形路径绘制
+            _this.ctx.clip();
+            (_this$ctx6 = _this.ctx).drawImage.apply(_this$ctx6, [i.src].concat(_toConsumableArray(_this.rpx2px(i.x, i.y, i.w, i.h))));
+            _this.ctx.restore();
+          }, a);};for (var _iterator3 = this.img[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {_loop();
+
         }
 
         /* -文字绘制 */} catch (err) {_didIteratorError3 = true;_iteratorError3 = err;} finally {try {if (!_iteratorNormalCompletion3 && _iterator3.return != null) {_iterator3.return();}} finally {if (_didIteratorError3) {throw _iteratorError3;}}}var _iteratorNormalCompletion4 = true;var _didIteratorError4 = false;var _iteratorError4 = undefined;try {
 
-        for (var _iterator4 = this.text[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {var _i = _step4.value;
+        for (var _iterator4 = this.text[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {var i = _step4.value;
           var drawTxt = '', //当前绘制内容
           drawLineNum = 0, //当前行数索引
           drawIndex = 0; //当前绘制内容索引
-          _i.w = this.rpx2px(_i.w);
+          i.w = this.rpx2px(i.w);
 
-          this.ctx.font = "".concat(_i.weight, " ").concat(this.rpx2px(_i.size), "px/").concat(this.rpx2px(_i.lineHeight), "px sans-serif");
-          this.ctx.setFillStyle(_i.color);
+          this.ctx.font = "".concat(i.weight, " ").concat(this.rpx2px(i.size), "px/").concat(this.rpx2px(i.lineHeight), "px sans-serif");
+          this.ctx.setFillStyle(i.color);
           this.ctx.setTextBaseline('top');
-          if (this.ctx.measureText(_i.content).width <= _i.w) {var _this$ctx7; //只有一行内容
-            (_this$ctx7 = this.ctx).fillText.apply(_this$ctx7, [_i.content].concat(_toConsumableArray(this.rpx2px(_i.x, _i.y))));
-            if (_i.lineThrough) {var _this$ctx8, _this$ctx9; //情景：存在贯穿线
+          if (this.ctx.measureText(i.content).width <= i.w) {var _this$ctx7; //只有一行内容
+            (_this$ctx7 = this.ctx).fillText.apply(_this$ctx7, [i.content].concat(_toConsumableArray(this.rpx2px(i.x, i.y))));
+            if (i.lineThrough) {var _this$ctx8, _this$ctx9; //情景：存在贯穿线
               this.ctx.beginPath();
-              (_this$ctx8 = this.ctx).moveTo.apply(_this$ctx8, _toConsumableArray(this.rpx2px(_i.x, _i.y + _i.size / 2 - 3)));
-              (_this$ctx9 = this.ctx).lineTo.apply(_this$ctx9, _toConsumableArray(this.rpx2px(_i.x + this.px2rpx(this.ctx.measureText(_i.content).width), _i.y + _i.size / 2 - 3)));
-              this.ctx.setStrokeStyle(_i.color);
+              (_this$ctx8 = this.ctx).moveTo.apply(_this$ctx8, _toConsumableArray(this.rpx2px(i.x, i.y + i.size / 2 - 3)));
+              (_this$ctx9 = this.ctx).lineTo.apply(_this$ctx9, _toConsumableArray(this.rpx2px(i.x + this.px2rpx(this.ctx.measureText(i.content).width), i.y + i.size / 2 - 3)));
+              this.ctx.setStrokeStyle(i.color);
               this.ctx.setLineWidth(1.6);
               this.ctx.stroke();
             }
           } else {
-            for (var j = 0; j < _i.content.length; j++) {
-              drawTxt += _i.content[j];
-              if (this.ctx.measureText(drawTxt).width >= _i.w) {
-                if (drawLineNum === _i.maxLineNum) {var _this$ctx10; //情景：多行时最后一行内容超过边界
-                  (_this$ctx10 = this.ctx).fillText.apply(_this$ctx10, [_i.content.substring(drawIndex, j - 1) + '...'].concat(_toConsumableArray(this.rpx2px(_i.x, _i.y + _i.lineHeight *
+            for (var j = 0; j < i.content.length; j++) {
+              drawTxt += i.content[j];
+              if (this.ctx.measureText(drawTxt).width >= i.w) {
+                if (drawLineNum === i.maxLineNum) {var _this$ctx10; //情景：多行时最后一行内容超过边界
+                  (_this$ctx10 = this.ctx).fillText.apply(_this$ctx10, [i.content.substring(drawIndex, j - 1) + '...'].concat(_toConsumableArray(this.rpx2px(i.x, i.y + i.lineHeight *
                   drawLineNum))));
                   break;
                 } else {var _this$ctx11; //情景：多行时最后一行之前的内容
-                  (_this$ctx11 = this.ctx).fillText.apply(_this$ctx11, [_i.content.substring(drawIndex, j + 1)].concat(_toConsumableArray(this.rpx2px(_i.x, _i.y + _i.lineHeight * drawLineNum))));
+                  (_this$ctx11 = this.ctx).fillText.apply(_this$ctx11, [i.content.substring(drawIndex, j + 1)].concat(_toConsumableArray(this.rpx2px(i.x, i.y + i.lineHeight * drawLineNum))));
                   drawIndex = j + 1;
                   drawLineNum += 1;
                   drawTxt = '';
                 }
               } else {
-                if (j === _i.content.length - 1) {var _this$ctx12; //情景：多行时最后一行内容未超过边界
-                  (_this$ctx12 = this.ctx).fillText.apply(_this$ctx12, [drawTxt].concat(_toConsumableArray(this.rpx2px(_i.x, _i.y + _i.lineHeight * drawLineNum))));
+                if (j === i.content.length - 1) {var _this$ctx12; //情景：多行时最后一行内容未超过边界
+                  (_this$ctx12 = this.ctx).fillText.apply(_this$ctx12, [drawTxt].concat(_toConsumableArray(this.rpx2px(i.x, i.y + i.lineHeight * drawLineNum))));
                 }
               }
             }
           }
         }} catch (err) {_didIteratorError4 = true;_iteratorError4 = err;} finally {try {if (!_iteratorNormalCompletion4 && _iterator4.return != null) {_iterator4.return();}} finally {if (_didIteratorError4) {throw _iteratorError4;}}}
-      this.ctx.draw(false, function (res) {
-        uni.canvasToTempFilePath({
-          canvasId: 'generate',
-          success: function success(res) {
-            _this.$emit('exportSuccess', res.tempFilePath);
-          } },
-        _this);
-      });
+      setTimeout(function () {
+        _this.ctx.draw(false, function (res) {
+          uni.canvasToTempFilePath({
+            canvasId: 'generate',
+            success: function success(res) {
+              _this.$emit('exportSuccess', res.tempFilePath);
+            } },
+          _this);
+        });
+      }, a);
+
 
 
     },
@@ -249,12 +258,16 @@ __webpack_require__.r(__webpack_exports__);
         r = Math.min(w, h) / 2;
       }
       this.ctx.beginPath();
-      this.ctx.moveTo(x + r, y); // 将操作点移至左上角
-      this.ctx.arcTo(x + w, y, x + w, y + r, r); // 画右上角的弧        
+      this.ctx.moveTo(x, y); // 将操作点移至左上角
+      this.ctx.arcTo(x + w, y, x + w, y + r, r); // 画右上角的弧
+      this.ctx.lineTo(x + w, y);
       this.ctx.arcTo(x + w, y + h, x + w - r, y + h, r); // 画右下角的弧
+      this.ctx.lineTo(x + w, y + h);
       this.ctx.arcTo(x, y + h, x, y + h - r, r); // 画左下角的弧
+      this.ctx.lineTo(x, y + h);
       this.ctx.arcTo(x, y, x + r, y, r); // 画左上角的弧
-      this.ctx.closePath();
+      this.ctx.lineTo(x, y);
+      // this.ctx.closePath();
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
