@@ -1,8 +1,0 @@
-{
-  "navigationBarTitleText": "我的",
-  "onReachBottomDistance": 100,
-  "enablePullDownRefresh": true,
-  "usingComponents": {
-    "sign": "/pages/user/sign"
-  }
-}

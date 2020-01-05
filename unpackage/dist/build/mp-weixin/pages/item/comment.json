@@ -1,8 +1,0 @@
-{
-  "navigationBarTitleText": "全部评价",
-  "onReachBottomDistance": 100,
-  "enablePullDownRefresh": true,
-  "usingComponents": {
-    "comment": "/component/comment"
-  }
-}

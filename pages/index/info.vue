@@ -1,23 +1,28 @@
 <template>
-	<view class="zx-info" :class="active?'show':'hide'" @tap="handldWin">
+	<view v-if="active" class="zx-info" @animationend="animeEnd" :class="anime?'show':'hide'" @tap="closeInfo">
 		<view class="zx-dialog">
 			<view class="zx-content">
 				<view class="zx-title">文本/图片模式</view>
-				<view> 1、滑动目标中心则调整位置</view>
-				<view> 2、滑动目标边缘即调整宽高 </view>
+				<view> 1、滑动目标中心则移动</view>
+				<view> 2、滑动目标内存边缘即调整宽高 </view>
 				<view style="display: flex;">
-					<image src="https://s2.ax1x.com/2020/01/01/l8a92j.png" class="zx-img" mode="aspectFit"></image> <view style="line-height: 180rpx;color: #999999;">(不支持调整文本高度)</view>
+					<image src="https://s2.ax1x.com/2020/01/01/l8a92j.png" class="zx-img" mode="aspectFit"></image>
+					<view style="line-height: 180rpx;color: #999999;">(不支持调整文本高度)</view>
 				</view>
-				<view> 3、长按目标即删除</view>
+				<view> 3、长按目标即移动</view>
 				<view style="display: flex;">
-				<image src="https://s2.ax1x.com/2020/01/01/l8apGQ.png" class="zx-img" mode="aspectFit"></image><view style="line-height: 180rpx;color: #999999;">(长按350ms以上判定)</view>
-					</view>
+					<image src="https://s2.ax1x.com/2020/01/01/l8apGQ.png" class="zx-img" mode="aspectFit"></image>
+					<view style="line-height: 180rpx;color: #999999;">(长按350ms以上判定)</view>
+				</view>
 				<view class="zx-title">画布模式</view>
-				<view>1、手绘，可选择保存或编辑</view>
+				<view>1、手绘</view>
+				<view>1、点击<text style="font-weight: bold;">保存</text>后直接保存至本地相册</view>
+				<view>2、点击<text style="font-weight: bold;">确认</text>转成图片进行编辑</view>
 				<view class="zx-title" style="margin-top: 20rpx;">导出</view>
 				<view>1、导出的图片为PNG格式</view>
 				<view>2、导出后长按即可保存/分享/收藏</view>
-				<view style="margin-top: 30rpx;color: #999999;">（更多功能等你发现~）</view>
+				<view style="margin-top: 30rpx;color: #999999;">更多功能/彩蛋等你发现</view>
+				<view style="color: #999999;">点击TensionMax再次弹出</view>
 			</view>
 			<!-- <button class="zx-btn" @tap="handldWin">X</button> -->
 		</view>
@@ -30,15 +35,21 @@
 		data() {
 			return {
 				active: true,
+				anime:true
 			}
 		},
 		methods: {
-			handldWin() {
-				this.active = !this.active
+			openInfo() {
+				this.active = true
+				this.anime = true
 			},
-			selectColor(item) {
-				this.handldWin()
-				this.$emit('getColor', item.color)
+			closeInfo(){
+				this.anime = false
+			},
+			animeEnd(){
+				if(!this.anime){
+					this.active = false
+				}
 			}
 		}
 	}
@@ -53,14 +64,14 @@
 		left: 0;
 		right: 0;
 		background-color: rgba(0, 0, 0, .5);
-		z-index: 9999;
+		z-index: 1000;
 
 		.zx-dialog {
 			display: flex;
 			position: absolute;
 			margin: auto;
 			width: 600rpx;
-			height: 900rpx;
+			height: 1100rpx;
 			bottom: 0;
 			top: 0;
 			left: 0;

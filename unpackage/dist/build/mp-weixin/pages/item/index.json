@@ -1,9 +1,0 @@
-{
-  "navigationBarTitleText": "商品介绍",
-  "onReachBottomDistance": 100,
-  "enablePullDownRefresh": true,
-  "usingComponents": {
-    "item-list": "/component/item-list",
-    "cart": "/pages/cart/icon-link"
-  }
-}

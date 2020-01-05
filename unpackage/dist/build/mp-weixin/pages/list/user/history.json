@@ -1,8 +1,0 @@
-{
-  "navigationBarTitleText": "我的足迹",
-  "onReachBottomDistance": 100,
-  "enablePullDownRefresh": true,
-  "usingComponents": {
-    "item-list": "/component/item-list"
-  }
-}

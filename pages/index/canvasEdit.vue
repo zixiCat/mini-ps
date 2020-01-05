@@ -44,7 +44,7 @@
 				this.ctx = uni.createCanvasContext('canvas', this);
 				this.ctx.setLineCap('round')
 			},
-			handleCanvasColor(val){
+			handleCanvasColor(val) {
 				this.ctx.setStrokeStyle(val)
 			},
 			touchStart(e) {
@@ -101,25 +101,35 @@
 			handleClear() {
 				this.active = false
 				setTimeout(() => {
+					this.clipX = []
+					this.clipY = []
 					this.active = true
 				}, 100)
 			},
 			save() {
-				uni.showModal({
-					content: '是否将当前画布(不含图片和文字)内容保存至本地',
-					success: res => {
-						if (res.confirm) {
-							setTimeout(()=>{
-							this.getCanvasImage('save')
-							},300)
-						}
-					}
-				});
+				if (this.clipX.length) {
+					setTimeout(() => {
+						this.getCanvasImage('save')
+					}, 300)
+				} else {
+					uni.showToast({
+						title: '画布空空如也~',
+						icon: 'none'
+					})
+				}
+
 			},
 			confirm() {
-				setTimeout(()=>{
-				this.getCanvasImage('confirm')
-				},300)
+				if (this.clipX.length) {
+					setTimeout(() => {
+						this.getCanvasImage('confirm')
+					}, 300)
+				} else {
+					uni.showToast({
+						title: '画布空空如也~',
+						icon: 'none'
+					})
+				}
 			},
 			getCanvasImage(type) {
 				this.copyClip.x = Math.min(...this.clipX) - 5

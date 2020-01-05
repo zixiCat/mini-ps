@@ -1,424 +1,635 @@
 <template>
 	<view>
-		<!-- 搜索 -->
-		<view class="cu-bar zx-search bg-orange radius">
-			<view class="bg-gradual-anime " :class="scrollTop>10?'fadeout':'fadein'"></view>
-			<view @tap="setLocation">
-				<text class="cuIcon-locationfill text-lg margin-left margin-right-xs text-bold text-white"></text>
-				<view class="text-lg text-white text-cut text-center zx-location">{{location.name}}</view>
-				<text class="cuIcon-right text-white"></text>
+		<image src="https://s2.ax1x.com/2020/01/05/lD3390.jpg" style="width: 100%;display: block;" @tap="exportSuccess('https://s2.ax1x.com/2020/01/05/lD3390.jpg')"></image>
+		<view style="padding-bottom: 100rpx;background-image: linear-gradient(180deg, #ffffff, #F8F8F8);"></view>
+		<view class="zx-container" @tap='cancelEditType' :style="{ height:container.h+'px'}">
+			<imgEdit ref="img" v-model="imageList" :active.sync='imgActive'></imgEdit>
+			<fontEdit ref="font" v-model="textList" :active.sync='textActive'></fontEdit>
+			<canvasEdit ref="canvas" v-if="editType=='canvas'" v-model="canvasConfig" @handleCanvasImage="handleCanvasImage"></canvasEdit>
+			<view class="zx-adjust-size" @tap.stop @touchmove.stop='canvasAdjustMove'>===</view>
+		</view>
+		<!--        <adjustment @handlePosition="handlePosition" @handleColor="handleColor" @hanldeFontSrc="hanldeFontSrc" @hanldeImgSrc="hanldeImgSrc"></adjustment>-->
+		<view>
+			<view class="zx-config" :class="isShow?'zx-slide-in':'zx-slide-out'">
+				<view class="zx-unfold" @tap="unfold">||</view>
+				<view class="zx-title">
+					<view>
+						<button class="zx-btn" :class="editType=='img'?'zx-select':''" @tap="handleImgType">图</button>
+						<button class="zx-btn" :class="editType=='font'?'zx-select':''" @tap="handleFontType">A</button>
+						<button class="zx-btn" :class="editType=='canvas'?'zx-select':''" @tap="handleCanvasType">画
+						</button>
+					</view>
+					<view v-if="editType!=='i'" class="zx-huang" :style="{color: curColor}" @tap="info">TensionMax</view>
+					<view>
+						<button v-if="editType!=='canvas'" class="zx-btn" style="width: 80rpx;"  @tap="export2png">导出</button>
+						<button v-if="editType==='img'" class="zx-btn" :class="imgConfig.mirror&&editType==='img'?'zx-select':''" @tap="tapTopBtn4">镜</button>
+						<button  class="zx-btn" @tap="tapTopBtn1">清</button>
+						<button v-if="editType!=='canvas'" class="zx-btn" @tap="tapTopBtn2">删</button>
+						<!-- <button v-if="editType==='img'" class="zx-btn" :class="imgConfig.shadow&&editType==='img'?'zx-select':''" @tap="tapTopBtn3">影</button> -->
+						<button class="zx-btn" @tap="close">X</button>
+					</view>
+				</view>
+				<view v-if="!editType" class="zx-body">
+					<view class="zx-tips">
+						请选择/插入文字或图片
+					</view>
+				</view>
+				<view v-if="editType" class="zx-body">
+					<view>
+						<view class="zx-range">
+							<view class="zx-label">{{btnType[editType].range1}}</view>
+							<button class="zx-range-btn" @longpress='longpressRange1(-1)' @touchcancel="touchendRange1" @touchend="touchendRange1"
+							 @tap="tapRange1(-1)">-
+							</button>
+							<input disabled v-if="editType==='img'" type="number" v-model.trim="imgConfig.r" />
+							<input disabled v-if="editType==='font'" type="number" v-model.trim="fontConfig.size" />
+							<input disabled v-if="editType==='canvas'" type="number" v-model.trim="canvasConfig.lineWidth" />
+							<button class="zx-range-btn" @longpress='longpressRange1(1)' @touchcancel="touchendRange1" @touchend="touchendRange1"
+							 @tap="tapRange1(1)">+
+							</button>
+						</view>
+						<view class="zx-range">
+							<view class="zx-label">{{btnType[editType].range2}}</view>
+							<button class="zx-range-btn" @longpress='longpressRange2(-1)' @touchcancel="touchendRange2" @touchend="touchendRange2"
+							 @tap="tapRange2(-1)">-
+							</button>
+							<input disabled v-if="editType==='img'" type="number" v-model.trim="imgConfig.degrees" />
+							<input disabled v-if="editType==='font'" type="number" v-model.trim="fontConfig.lineHeight" />
+							<input disabled v-if="editType==='canvas'" type="number" v-model.trim="canvasConfig.keenness" />
+							<button class="zx-range-btn" @longpress='longpressRange2(1)' @touchcancel="touchendRange2" @touchend="touchendRange2"
+							 @tap="tapRange2(1)">+
+							</button>
+						</view>
+					</view>
+					<view class="zx-operate">
+						<button class="zx-btn" @tap="tapBtn1">{{btnType[editType].btn1}}</button>
+						<button class="zx-btn" :class="fontConfig.weight&&editType==='font'?'zx-select':''" @tap="tapBtn2">
+							{{btnType[editType].btn2}}
+						</button>
+						<button class="zx-btn" @tap="tapBtn3">{{btnType[editType].btn3}}</button>
+						<button class="zx-btn" :class="fontConfig.lineThrough&&editType==='font'?'zx-select':''" @tap="tapBtn4">{{btnType[editType].btn4}}
+						</button>
+					</view>
+				</view>
+				<zxColor ref="color" @getColor="getColor"></zxColor>
 			</view>
-			<view class="search-form round text-orange bg-white" style="margin-left: 10upx;margin-right: 20upx;background-color: #fff">
-				<text class="cuIcon-search text-orange text-bold text-xl" style="margin-left: 20upx"></text>
-				<input type="text" placeholder="搜索商户名、商品名等" @tap="jump2search" disabled />
+			<view class="zx-pull-src">
+				<button class="zx-add-img-btn" @tap="uploadImg">+</button>
+				<input class="zx-content" placeholder="输入文本内容" v-model.trim="inputContent"></input>
+				<button class="zx-add-text-btn" @tap="handleText">{{editType=='font'?'修改':'新增'}}</button>
 			</view>
 		</view>
-		<!-- 主体- -->
-		<view class="zx-body">
-			<!-- 主体-轮播图  -->
-			<view class="bg-gradual-anime" :class="scrollTop>10?'fadeout':'fadein'"></view>
-			<view class="zx-header padding-left-sm padding-right-sm" :class="">
-				<view class=" radius overflow-hidden">
-					<swiper class="zx-swiper" :indicator-dots="true" :autoplay="true" :circular="true" indicator-color="#ffffff"
-					 indicator-active-color="#f97502">
-						<swiper-item class="bg-gray" v-for="(item,index) in swiperList" :key="index">
-							<image :src="item.url" mode="aspectFill" @tap="jump2item(item,index)"></image>
-						</swiper-item>
-					</swiper>
-				</view>
-			</view>
-			<view class="margin-left-sm margin-right-sm">
-				<!-- 主体-分类 -->
-				<view class="grid col-5 zx-category padding-top padding-bottom">
-					<view class="padding-left-sm padding-right-sm padding-bottom-xs" v-for="(item,index) in categoryList" :key="index"
-					 @tap="jump2formShopsSign">
-						<image class="round" :src="item.url" mode="aspectFill"></image>
-						<view class="text-center text-sm">{{index===9?'商家入驻':('分类'+index)}}</view>
-					</view>
-				</view>
-				<!-- 主体-广告 -->
-				<image class="zx-ad" src="https://ossweb-img.qq.com/images/lol/web201310/skin/big10006.jpg" @tap="jump2test"
-				 mode="aspectFill"></image>
-				<!-- 主体-限时活动 -->
-				<view class="zx-sale margin-top-xs bg-white radius padding-top-sm padding-bottom-sm">
-					<view class="flex padding-left-sm padding-right-sm">
-						<view class="flex-treble">
-							<view class="flex justify-start zx-title round">
-								<view class="round bg-red text-center">20日限时秒杀</view>
-								<view class="text-red text-center text-bold">59:59:59</view>
-							</view>
-						</view>
-						<button class="cu-btn bg-red round zx-more" @tap="jump2searchDetail">更多</button>
-					</view>
-					<view class="grid col-5 padding-left-xs padding-right-xs">
-						<view class="zx-item" v-for="(item,index) of saleList" :key="index">
-							<image class="radius" :src="item.url" mode="aspectFill" @tap="jump2item(item,index)"></image>
-							<view class="text-center">￥199</view>
-							<view class="text-center text-gray text-through">￥999</view>
-						</view>
-					</view>
-				</view>
-			</view>
-			<!-- </view> -->
-			<!-- 主体-商家 -->
-			<view class="margin-top-sm bg-white padding-sm radius">
-				<view class="text-lg text-bold">推荐商家</view>
-				<!-- 主体-商家-筛选工具栏 -->
-				<view class="flex margin-top-xs">
-					<view class="flex-treble">
-						综合排序
-						<!-- <text class="cuIcon-triangleupfill text-lg"></text> -->
-						<text class="cuIcon-triangledownfill text-lg"></text>
-					</view>
-					<view class="flex-twice">
-						销量
-					</view>
-					<view class="flex-twice">
-						距离
-					</view>
-					<view class="flex-twice">
-						口碑
-					</view>
-					<view class="flex-twice text-center">
-						筛选
-						<text class="cuIcon-filter text-lg"></text>
-					</view>
-				</view>
-				<!-- 主体-商家-商家列表 -->
-				<view class="zx-shops flex padding-top-sm" v-for="(item,index) of shopsList" :key="index" @tap="jump2shopsDetail(item,index)">
-					<image class="radius" :src="item.url" mode="aspectFill"></image>
-					<view class="zx-detail padding-left-sm flex-sub">
-						<view class="flex zx-title margin-top-xs">
-							<view class="flex-sub text-l text-bold">商店名</view>
-							<view class="margin-top-xs">5.0km</view>
-						</view>
-						<view class="margin-top-xs">描述描述描述描述描述描述描述...</view>
-						<view class="margin-top-xs">
-							<text class="cuIcon-favorfill text-yellow"></text>
-							<text class="padding-left-xs text-gray">9.5分</text>
-							<text class="padding-left-xl text-gray">人均￥99员</text>
-						</view>
-					</view>
-				</view>
-			</view>
-			<view class="margin-sm text-gray text-center">~ 我也是有底线的 ~</view>
-		</view>
-		<!-- 购物车 -->
-		<cart></cart>
+		<zx-info ref="info"></zx-info>
+		<generate-img v-if="activeGenerate" :img="imageSrc" :text="textSrc" :canvasH="(px2rpx(container.h)-30)" ref="generate"
+		 @exportSuccess="exportSuccess"></generate-img>
 	</view>
 </template>
 
 <script>
-	import cart from "pages/cart/icon-link.vue"
-	import amap from 'util/map/amap-wx.js';
+	import imgEdit from './imgEdit.vue'
+	import fontEdit from './fontEdit.vue'
+	import canvasEdit from './canvasEdit'
+	import zxColor from './zxColor'
+	import zxInfo from './info'
+	import generateImg from './generateImg'
+
 	export default {
 		components: {
-			cart
+			imgEdit,
+			fontEdit,
+			canvasEdit,
+			zxColor,
+			zxInfo,
+			generateImg
 		},
 		data() {
 			return {
-				/* 滚动的Y坐标 */
-				scrollTop: 0,
-				/* 地图配置 */
-				amapPlugin: null,
-				key: '820ff2213924c04f7e4dc891190b1c1e',
-				location: {
-					longitude: '116.46',
-					latitude: '39.92',
-					name: '加载中'
+				//画布尺寸 measure
+				imageList: [],
+				textList: [],
+				textActive: -1,
+				imgActive: -1,
+				curColor: '#000',
+				isShow: true,
+				timer: null,
+				activeGenerate: false,
+				btnType: {
+					font: {
+						range1: '字体大小',
+						range2: '行间距离',
+						btn1: '居中',
+						btn2: '加粗',
+						btn3: '颜色',
+						btn4: '贯穿'
+					},
+					img: {
+						range1: '圆角半径',
+						range2: '旋转角度',
+						btn1: '居中',
+						btn2: '铺满',
+						btn3: '置顶',
+						btn4: '置底'
+					},
+					canvas: {
+						range1: '笔画大小',
+						range2: '笔锋程度',
+						btn1: '清空',
+						btn2: '保存',
+						btn3: '颜色',
+						btn4: '确认'
+					}
 				},
-				/* 轮播图 */
-				swiperList: [{
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big21016.jpg'
+				defaultConfig: {
+					imgPosition: {
+						x: 50,
+						y: 50,
+						w: 200
 					},
-					{
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg'
+					fontPosition: {
+						x: 50,
+						y: 50,
+						w: 200
 					},
-					{
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg'
+					img: {
+						r: 0,
+						degrees: 0,
+						shadow: false,
+						mirror: false,
+					},
+					font: {
+						lineHeight: 14,
+						size: 14,
+						weight: false,
+						lineThrough: false,
+						color: '#000',
+					},
+					canvas: {
+						color: '#000',
+						lineWidth: 2,
+						keenness: 0
 					}
-				],
-				/* 分类 */
-				categoryList: [{
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big84000.jpg'
-					}, {
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg'
-					},
-					{
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg'
-					}, {
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big21016.jpg'
-					},
-					{
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg'
-					},
-					{
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big84000.jpg'
-					}, {
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big37006.jpg',
-					}, {
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big25011.jpg'
-					},
-					{
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big21016.jpg'
-					},
-					{
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg'
-					}
-				],
-				/* 限时秒杀 */
-				saleList: [{
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10006.jpg'
-					},
-					{
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg'
-					}, {
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg'
-					}, {
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10006.jpg'
-					},
-					{
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg'
-					}
-				],
-				/* 商家列表 */
-				shopsList: [{
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big84000.jpg'
-					}, {
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big37006.jpg',
-					}, {
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg'
-					},
-					{
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg'
-					},
-					{
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big84000.jpg'
-					}, {
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big25011.jpg'
-					},
-					{
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big21016.jpg'
-					},
-					{
-						url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg'
-					}
-				]
+				},
+				editType: null,
+				container: {
+					w: null,
+					h: null
+				},
+				imgConfig: {},
+				fontConfig: {},
+				canvasConfig: {},
+				inputContent: '',
+				imageSrc: null,
+				textSrc: null
+
 			}
 		},
-		onLoad() {
-			this.getCurLocation()
+		watch: {
+			textActive(val) {
+				if (val > -1) {
+					if (this.editType !== 'font') {
+						this.imgActive = -1
+						this.editType = 'font'
+					}
+					console.log(this.textList[val].config, val + 'val')
+					this.fontConfig = this.textList[val].config;
+					this.inputContent = this.textList[val].content
+				} else if (this.imgActive === -1 && this.textActive === -1 && this.editType !== 'canvas') {
+					this.editType = null
+				}
+			},
+			imgActive(val) {
+				if (val > -1) {
+					if (this.editType !== 'img') {
+						this.textActive = -1
+						this.editType = 'img'
+					}
+					this.imgConfig = this.imageList[val].config;
+				} else if (this.imgActive === -1 && this.textActive === -1 && this.editType !== 'canvas') {
+					this.editType = null
+				}
+			},
+			editType(val) {
+				if (!val || val === 'canvas') {
+					this.textActive = -1
+					this.imgActive = -1
+					this.inputContent = ''
+				}
+			}
 		},
 		onReady() {
-
-		},
-		onReachBottom() {
-			uni.showLoading({
-				title: '加载中',
-				mask: true
-			})
-			setTimeout(function() {
-				uni.hideLoading()
-			}, 1000);
-		},
-		onPullDownRefresh() {
-			setTimeout(function() {
-				uni.stopPullDownRefresh();
-			}, 1000);
-		},
-		onPageScroll(e) {
-			this.scrollTop = e.scrollTop
+			this.imgConfig = JSON.parse(JSON.stringify(this.defaultConfig.img))
+			this.fontConfig = JSON.parse(JSON.stringify(this.defaultConfig.font))
+			this.canvasConfig = JSON.parse(JSON.stringify(this.defaultConfig.canvas))
+			this.k = uni.getSystemInfoSync().screenWidth / 750
+			this.setContainerW()
 		},
 		methods: {
-			/* 地址信息 */
-			getCurLocation() {
-				this.amapPlugin = new amap.AMapWX({ //初始化高德地图SDK实例对象
-					key: this.key
-				});
-				this.amapPlugin.getRegeo({
-					success: res => {
-						this.location.longitude = res[0].longitude
-						this.location.latitude = res[0].latitude
-						this.location.name = res[0].desc;
-						this.location.address = res[0].name;
-					},
-					fail: res => {
-						this.location.name = '暂未获取';
-					}
-				});
+			/* 单位转换 unit conversion */
+			px2rpx() {
+				if (arguments.length == 1)
+					return arguments[0] / this.k
+				let params = []
+				for (let i of arguments) {
+					params.push((i / this.k) || 0)
+				}
+				return params
 			},
-			setLocation() {
-				let _this = this
-				uni.chooseLocation({
-					success: function(res) {
-						if (res.name) {
-							_this.location.name = res.name
-							_this.location.address = res.address
-							_this.location.latitude = res.latitude
-							_this.location.longitude = res.longitude
+			rpx2px() {
+				if (arguments.length == 1)
+					return arguments[0] * this.k
+				let params = []
+				for (let i of arguments) {
+					params.push((i * this.k) || 0)
+				}
+				return params
+			},
+			cancelEditType() {
+				this.editType = null
+			},
+			handleImgType() {
+				if (this.editType !== 'img') {
+					let i = this.imageList.length
+					if (i) {
+						this.imgActive = i - 1
+					} else {
+						uni.showModal({
+							title: '提示',
+							content: '请点击调控板左下角插入图片',
+							showCancel: false,
+						});
+					}
+				}
+			},
+			handleFontType() {
+				if (this.editType !== 'font') {
+					let i = this.textList.length
+					if (i) {
+						this.textActive = i - 1
+					} else {
+						uni.showModal({
+							title: '提示',
+							content: '请点击调控板左下角插入文字',
+							showCancel: false,
+						});
+					}
+				}
+			},
+			setContainerW() {
+				this.container.w = this.rpx2px(720)
+				this.container.h = this.rpx2px(1000)
+			},
+			getColor(e) {
+				this.curColor = e
+				this.$refs.font.handleFontColor(e)
+				this.canvasConfig.color = e
+			},
+			//上传图片 upload img
+			uploadImg() {
+				uni.chooseImage({
+					count: 1,
+					sourceType: ['album', 'camera'],
+					success: res => {
+						uni.getImageInfo({
+							src: res.tempFilePaths[0],
+							success: info => {
+								this.imageList.push({
+									src: res.tempFilePaths[0],
+									position: {
+										...this.defaultConfig.imgPosition,
+										h: 200 * info.height / info.width,
+									},
+									config: {
+										...this.defaultConfig.img
+									},
+									isMove: false
+								})
+								this.textActive = -1
+								this.imgActive = this.imageList.length - 1
+								this.editType = 'img'
+							}
+						})
+					}
+				})
+			},
+			//新增或编辑文字 add or edit text
+			handleText() {
+				if (!this.inputContent) {
+					uni.showModal({
+						title: '提示',
+						content: '编辑内容不能为空',
+						showCancel: false,
+					});
+				} else if (this.editType !== 'font') {
+					this.defaultConfig.font.color = this.curColor
+					this.textList.push({
+						content: this.inputContent,
+						position: this.defaultConfig.fontPosition,
+						config: this.defaultConfig.font,
+						isMove: false
+					})
+					this.imgActive = -1
+					this.textActive = this.textList.length - 1
+					this.editType = 'font'
+				} else {
+					this.textList[this.textActive].content = this.inputContent
+				}
+			},
+			handleCanvasType() {
+				this.editType = 'canvas'
+			},
+			//清空 clear 
+			tapTopBtn1() {
+				uni.showModal({
+					title: '提示',
+					content: '是否清空绘画板',
+					success: res=> {
+						if (res.confirm) {
+							this.textList = []
+							this.imageList = []
+							this.editType = null
 						}
 					}
 				});
 			},
-			/* 页面跳转 */
-			jump2search() {
-				uni.navigateTo({
-					url: '/pages/search/index'
-				})
+			//删除对象 delete item but I have no one QAQ
+			tapTopBtn2() {
+				if (this.imgActive > -1) {
+					this.imageList.splice(this.imgActive, 1)
+					this.imgActive = -1
+				} else if (this.textActive > -1) {
+					this.textList.splice(this.textActive, 1)
+					this.textActive = -1
+				}
 			},
-			jump2searchDetail(item, index) {
-				uni.navigateTo({
-					url: '/pages/search/result'
-				})
+			tapTopBtn3() {
+				//设置阴影 set shadow
+				this.imgConfig.shadow = !this.imgConfig.shadow
+				this.$refs.img.handleImgShadow(this.imgConfig.shadow)
 			},
-			jump2item(item, index) {
-				uni.navigateTo({
-					url: '/pages/item/index'
-				})
+			tapTopBtn4() {
+				//设置镜像 set mirror
+				this.imgConfig.mirror = !this.imgConfig.mirror
+				this.$refs.img.handleImgMirror(this.imgConfig.mirror)
 			},
-			jump2formShopsSign() {
-				uni.navigateTo({
-					url: '/pages/form/shops/sign-in'
-				})
+			info() {
+				this.$refs.info.openInfo()
 			},
-			jump2test(){
-				uni.navigateTo({
-					url: '/pages/index/test2'
-				})
+			close() {
+				this.isShow = false
 			},
-			jump2shopsDetail(item, index) {
-				uni.navigateTo({
-					url: '/pages/shops/detail'
-				})
+			unfold() {
+				this.isShow = true
 			},
+			tapRange1(num) {
+				switch (this.editType) {
+					case 'img':
+						//圆角半径 radius
+						if (this.imgConfig.r + num < 0) return
+						this.imgConfig.r = this.imgConfig.r * 1 + num
+						this.$refs.img.handleImgR(this.imgConfig.r)
+						break;
+					case 'font':
+						//字体大小 font size
+						if (this.fontConfig.size + num < 0) return
+						this.fontConfig.size = this.fontConfig.size * 1 + num
+						this.$refs.font.handleFontSize(this.fontConfig.size)
+						break;
+					case 'canvas':
+						if (this.canvasConfig.lineWidth + num < 0 || this.canvasConfig.lineWidth + num > 5) return
+						this.canvasConfig.lineWidth = this.canvasConfig.lineWidth * 1 + num
+						break;
+					default:
+						break;
+				}
+			},
+			longpressRange1(num) {
+
+				switch (this.editType) {
+					case 'img':
+						//圆角半径 radius
+						this.timer = setInterval(() => {
+							if (this.imgConfig.r + num < 0) return
+							this.imgConfig.r = this.imgConfig.r * 1 + num
+							this.$refs.img.handleImgR(this.imgConfig.r)
+						}, 30)
+						break;
+					case 'font':
+						//字体大小 font size
+						this.timer = setInterval(() => {
+							if (this.fontConfig.size + num < 0) return
+							this.fontConfig.size = this.fontConfig.size * 1 + num
+							this.$refs.font.handleFontSize(this.fontConfig.size)
+						}, 30)
+						break;
+					case 'canvas':
+						break;
+					default:
+						break;
+				}
+			},
+			touchendRange1() {
+				clearInterval(this.timer)
+				this.timer = null
+			},
+			tapRange2(num) {
+				switch (this.editType) {
+					case 'img':
+						//旋转角度 rotate degrees
+						this.imgConfig.degrees = this.imgConfig.degrees * 1 + num
+						this.$refs.img.handleImgDegrees(this.imgConfig.degrees)
+						break;
+					case 'font':
+						if (this.fontConfig.lineHeight + num < 0) return
+						this.fontConfig.lineHeight = this.fontConfig.lineHeight * 1 + num
+						this.$refs.font.handleFontLineHeight(this.fontConfig.lineHeight)
+						break;
+					case 'canvas':
+						if (this.canvasConfig.keenness + num < 0 || this.canvasConfig.keenness + num > 5) return
+						this.canvasConfig.keenness = this.canvasConfig.keenness * 1 + num
+						break;
+					default:
+						break;
+				}
+			},
+			longpressRange2(num) {
+				switch (this.editType) {
+					case 'img':
+						//旋转角度 rotate degrees
+						this.timer = setInterval(() => {
+							this.imgConfig.degrees = this.imgConfig.degrees * 1 + num
+							this.$refs.img.handleImgDegrees(this.imgConfig.degrees)
+						}, 30)
+
+						break;
+					case 'font':
+						this.timer = setInterval(() => {
+							if (this.fontConfig.lineHeight + num < 0) return
+							this.fontConfig.lineHeight = this.fontConfig.lineHeight * 1 + num
+							this.$refs.font.handleFontLineHeight(this.fontConfig.lineHeight)
+						}, 30)
+
+						break;
+					case 'canvas':
+						break;
+					default:
+						break;
+				}
+			},
+			touchendRange2() {
+				clearInterval(this.timer)
+				this.timer = null
+			},
+			tapBtn1() {
+				switch (this.editType) {
+					case 'img':
+						//居中 align center
+						this.$refs.img.handleImgCenter(this.container.w)
+						break;
+					case 'font':
+						//居中 align center
+						this.$refs.font.handleFontCenter(this.container.w)
+						break;
+					case 'canvas':
+						//clear 清空
+						this.$refs.canvas.handleClear()
+						break;
+					default:
+						break;
+				}
+			},
+			tapBtn2() {
+				switch (this.editType) {
+					case 'img':
+						//铺满 full container
+						this.$refs.img.handleImgFullContainer(this.container.w)
+						break;
+					case 'font':
+						//加粗 font weight
+						this.fontConfig.weight = !this.fontConfig.weight
+						this.$refs.font.handleFontWeight(this.fontConfig.weight)
+						break;
+						//保存本地 save to local
+					case 'canvas':
+						this.$refs.canvas.save()
+						break;
+					default:
+						break;
+				}
+			},
+			tapBtn3() {
+				switch (this.editType) {
+					case 'img':
+						//置顶 set2top
+						this.$refs.img.handleImgSet2top()
+						break;
+					case 'font':
+						this.$refs.color.handldWin()
+						break;
+					case 'canvas':
+						this.$refs.color.handldWin()
+						break;
+					default:
+						this.$refs.color.handldWin()
+						break;
+				}
+			},
+			tapBtn4() {
+				switch (this.editType) {
+					case 'img':
+						//置底 set2bottom
+						this.$refs.img.handleImgSet2bottom()
+						break;
+					case 'font':
+						//贯穿 through
+						this.fontConfig.lineThrough = !this.fontConfig.lineThrough
+						this.$refs.font.handleFontLineThrough(this.fontConfig.lineThrough)
+						break;
+					case 'canvas':
+						this.$refs.canvas.confirm()
+						break;
+					default:
+						break;
+				}
+			},
+			handleCanvasImage(url, info) {
+				this.imageList.push({
+					src: url,
+					position: info,
+					config: this.defaultConfig.img,
+					isMove: false
+				})
+				this.imgActive = this.imageList.length - 1
+				this.editType = 'img'
+			},
+			//画布调整 canvas adjustment
+			canvasAdjustMove(e) {
+				if (e.touches[0].clientY < 110) return
+				this.container.h = e.touches[0].clientY
+			},
+			//导出PNG export to png
+			export2png() {
+				uni.showLoading({
+					mask:true,
+				    title: '正在导出'
+				});
+				let data = []
+				for (let i of this.imageList) {
+					let j = this.px2rpx(i.position.x, i.position.y, i.position.w, i.position.h, i.config.r)
+					data.push({
+						src: i.src,
+						x: j[0],
+						y: j[1],
+						w: j[2],
+						h: j[3],
+						r: j[4],
+						degrees: i.config.degrees,
+						shadow: i.config.shadow,
+						mirror: i.config.mirror
+					})
+				}
+				let data2 = []
+				for (let i of this.textList) {
+					let j = this.px2rpx(i.position.x, i.position.y, i.position.w, i.config.lineHeight, i.config.size)
+					data2.push({
+						content: i.content,
+						x: j[0],
+						y: j[1],
+						w: j[2] - 60, //元素padding为30rpx padding of the element is 30rpx
+						lineHeight: j[3],
+						size: j[4],
+						color: i.config.color,
+						weight: i.config.weight ? 'bold' : 'normal',
+						lineThrough: i.config.lineThrough
+					})
+				}
+				this.imageSrc = data
+				this.textSrc = data2
+				this.activeGenerate = true
+				setTimeout(() => {
+					this.$refs.generate.generate()
+				}, 600)
+			},
+			exportSuccess(url) {
+				uni.hideLoading()
+				this.activeGenerate = false
+				uni.previewImage({
+					urls: [url],
+					longPressActions: {
+						itemList: ['发送给朋友', '保存图片', '收藏'],
+						fail: err => {
+							uni.showModal({
+								title: '错误提示',
+								showCancel: false,
+								content: err.errMsg
+							});
+						}
+					}
+				});
+			}
 		}
 	}
 </script>
 
 <style lang="scss">
-	//搜索
-	.zx-search {
-		position: fixed;
-		z-index: 1;
-		width: 100%;
-		top: 0;
-		height: 80upx;
-
-		.bg-gradual-anime {
-			position: absolute;
-			width: 100%;
-			height: 100upx;
-			z-index: -1;
-			border-radius: 15upx 15upx 15upx 0;
-			background-image: linear-gradient(90deg, #ED0424, #FF7800);
-			color: #FFFFFF;
-		}
-
-		.zx-location {
-			display: inline-block;
-			max-width: 250upx;
-			height: 52upx
-		}
-	}
-
-	//主体
-	.zx-body {
-		position: relative;
-		top: 100upx;
-
-		.bg-gradual-anime {
-			position: absolute;
-			z-index: -1;
-			width: 100%;
-			height: 200upx;
-			background-image: linear-gradient(-15deg, #f8f8f8, #f8f8f8, #f8f8f8, #ED0424);
-		}
-
-		.zx-header {
-			width: 100%;
-			color: #ffffff;
-
-			.zx-swiper {
-				height: 220upx;
-				width: 100%;
-
-				image {
-					width: 100%;
-				}
-			}
-		}
-
-		.zx-category {
-			image {
-				height: 100upx;
-			}
-		}
-
-		.zx-ad {
-			height: 200upx;
-			width: 100%;
-			overflow: hidden
-		}
-
-		.zx-sale {
-			height: 300upx;
-
-			.zx-title {
-				width: 400upx;
-				border: 3upx solid #ED0424;
-
-				view {
-					width: 100%;
-				}
-			}
-
-			.zx-more {
-				height: auto;
-			}
-
-			.zx-item {
-				padding: 20upx 10upx;
-
-				image {
-					height: 120upx;
-				}
-			}
-		}
-
-		.zx-shops {
-			image {
-				width: 150upx;
-				height: 150upx;
-			}
-		}
-	}
-
-	/* 动画效果 */
-	.fadein {
-		animation: fadein .5s forwards;
-	}
-
-	.fadeout {
-		animation: fadeout .5s forwards;
-	}
-
-	@keyframes fadeout {
-		0% {
-			opacity: 1;
-		}
-
-		100% {
-			opacity: 0;
-		}
-	}
-
-	@keyframes fadein {
-		0% {
-			opacity: 0;
-		}
-
-		100% {
-			opacity: 1;
-		}
-	}
+	@import "./index.scss";
 </style>

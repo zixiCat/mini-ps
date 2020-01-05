@@ -1,17 +1,17 @@
 <template>
 	<view>
 		<image @tap.stop class="zx-img" :class="active===index?'zx-move':''" :style="{
-		left: item.position.x+'px',
-		top: item.position.y+'px',
-		width: item.position.w+'px',
-		height:item.position.h+'px',
-	    borderRadius:item.config.r+'px',
-		transform: 'scaleX('+(item.config.mirror? -1:1)+') rotate('+item.config.degrees+'deg)',
-		boxShadow:item.config.shadow?'0 2px 12px 0 rgba(0, 0, 0, 0.2)':'',
-		}"
+			 left: item.position.x+'px',
+			 top: item.position.y+'px',
+			 width: item.position.w+'px',
+			 height:item.position.h+'px',
+			 borderRadius:item.config.r+'px',
+			 transform: 'scaleX('+(item.config.mirror? -1:1)+') rotate('+item.config.degrees+'deg)',
+			 boxShadow:item.config.shadow?'0 2px 12px 0 rgba(0, 0, 0, 0.2)':'',
+			 }"
 		 @touchstart='touchStart($event,item,index)' @longpress='longPress($event,item,index)' @touchmove.stop='touchMove($event,item,index)'
-		 @touchcancel="touchEnd($event,item,index)" @touchend='touchEnd($event,item,index)' :src="item.src" v-for="(item,index) of value"
-		 :key="index"></image>
+		 @touchcancel="touchEnd($event,item,index)" @touchend='touchEnd($event,item,index)' v-for="(item,index) of value"
+		 :key="index" :src="item.src"></image>
 	</view>
 </template>
 
@@ -43,8 +43,9 @@
 			},
 			//删除对象 delete item but I have no one QAQ
 			longPress(e, item, index) {
-				this.value.splice(index, 1)
-				this.$emit('update:active', -1)
+				this.x0 = e.touches[0].clientX - item.position.x
+				this.y0 = e.touches[0].clientY - item.position.y
+				item.isMove = true
 			},
 			touchMove(e, item, index) {
 				if (item.isMove) {

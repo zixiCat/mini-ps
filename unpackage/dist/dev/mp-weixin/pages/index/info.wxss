@@ -32,7 +32,7 @@
   left: 0;
   right: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 9999;
+  z-index: 1000;
 }
 .zx-info .zx-dialog {
     display: -webkit-box;
@@ -41,7 +41,7 @@
     position: absolute;
     margin: auto;
     width: 600rpx;
-    height: 900rpx;
+    height: 1100rpx;
     bottom: 0;
     top: 0;
     left: 0;

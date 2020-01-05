@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view style="position:absolute;left: -110%;">
 		<canvas canvas-id="generate" :style="{ width: canvasW + 'rpx', height: canvasH + 'rpx'}"></canvas>
 	</view>
 </template>
@@ -49,33 +49,24 @@
 			generate() {
 				this.ctx.setFillStyle('#FFFFFF')
 				this.ctx.fillRect(0, 0, ...this.rpx2px(this.canvasW, this.canvasH))
-				let a = 100
 				for (let i of this.img) {
-					a += a
 					this.ctx.beginPath()
 					this.ctx.save()
-					if (i.degrees) {
-						this.ctx.translate(...this.rpx2px(i.x + i.w / 2, i.y + i.h / 2))
-						this.ctx.rotate(i.degrees * Math.PI / 180)
-						this.ctx.translate(...this.rpx2px(-i.x - i.w / 2, -i.y - i.h / 2))
-					}
 					if (i.mirror) {
 						this.ctx.translate(...this.rpx2px(i.x + i.w / 2, i.y + i.h / 2))
 						this.ctx.scale(-1, 1)
 						this.ctx.translate(...this.rpx2px(-i.x - i.w / 2, -i.y - i.h / 2))
 					}
-
-					if (i.shadow) {
-						this.ctx.setShadow(3, 5, 4, '#CDCDCD')
-						this.ctx.fill();
+					if (i.degrees) {
+						this.ctx.translate(...this.rpx2px(i.x + i.w / 2, i.y + i.h / 2))
+						this.ctx.rotate(i.degrees * Math.PI / 180)
+						this.ctx.translate(...this.rpx2px(-i.x - i.w / 2, -i.y - i.h / 2))
 					}
-					setTimeout(() => {
-						this.radiusRect(...this.rpx2px(i.x, i.y, i.w, i.h, i.r)) //（圆角）矩形路径绘制
-						this.ctx.clip()
-						this.ctx.drawImage(i.src, ...this.rpx2px(i.x, i.y, i.w, i.h))
-						this.ctx.restore()
-					}, a)
-
+		
+					this.radiusRect(...this.rpx2px(i.x, i.y, i.w, i.h, i.r)) //（圆角）矩形路径绘制
+					this.ctx.clip()
+					this.ctx.drawImage(i.src, ...this.rpx2px(i.x, i.y, i.w, i.h))
+					this.ctx.restore()
 				}
 
 				/* -文字绘制 */
@@ -121,21 +112,15 @@
 						}
 					}
 				}
-				setTimeout(() => {
-					this.ctx.draw(false, res => {
-						uni.canvasToTempFilePath({
-							canvasId: 'generate',
-							success: res => {
-								this.$emit('exportSuccess', res.tempFilePath);
-							},
-						}, this);
-					})
-				}, a)
-
-
-
+				this.ctx.draw(false, res => {
+					uni.canvasToTempFilePath({
+						canvasId: 'generate',
+						success: res => {
+							this.$emit('exportSuccess', res.tempFilePath);
+						},
+					}, this);
+				})
 			},
-			/* 获取canvas图片路径 */
 			/* 圆角矩形路径 */
 			radiusRect(x, y, w, h, r) {
 				if (r > w / 2 || r > h / 2) {
@@ -151,7 +136,6 @@
 				this.ctx.lineTo(x, y + h)
 				this.ctx.arcTo(x, y, x + r, y, r); // 画左上角的弧
 				this.ctx.lineTo(x, y)
-				// this.ctx.closePath();
 			}
 		}
 	};

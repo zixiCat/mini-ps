@@ -44,8 +44,9 @@
 			},
 			//删除对象 delete item but I have no one QAQ
 			longPress(e, item, index) {
-				this.value.splice(index, 1)
-				this.$emit('update:active', -1)
+				this.x0 = e.touches[0].clientX - item.position.x
+				this.y0 = e.touches[0].clientY - item.position.y
+				item.isMove = true
 			},
 			touchMove(e, item, index) {
 				if (item.isMove) {

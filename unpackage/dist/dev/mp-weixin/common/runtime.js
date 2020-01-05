@@ -104,11 +104,11 @@
 /******/
 /******/
 /******/ 		// mini-css-extract-plugin CSS loading
-/******/ 		var cssChunks = {"pages/index/canvasEdit":1,"pages/index/info":1,"pages/index/zxColor":1,"pages/cart/icon-link":1,"component/item-list":1,"pages/user/sign":1,"component/comment":1,"component/comment-detail":1};
+/******/ 		var cssChunks = {"pages/index/canvasEdit":1,"pages/index/info":1,"pages/index/zxColor":1};
 /******/ 		if(installedCssChunks[chunkId]) promises.push(installedCssChunks[chunkId]);
 /******/ 		else if(installedCssChunks[chunkId] !== 0 && cssChunks[chunkId]) {
 /******/ 			promises.push(installedCssChunks[chunkId] = new Promise(function(resolve, reject) {
-/******/ 				var href = "" + ({"pages/index/canvasEdit":"pages/index/canvasEdit","pages/index/fontEdit":"pages/index/fontEdit","pages/index/generateImg":"pages/index/generateImg","pages/index/imgEdit":"pages/index/imgEdit","pages/index/info":"pages/index/info","pages/index/zxColor":"pages/index/zxColor","pages/cart/icon-link":"pages/cart/icon-link","component/item-list":"component/item-list","pages/user/sign":"pages/user/sign","component/comment":"component/comment","component/comment-detail":"component/comment-detail"}[chunkId]||chunkId) + ".wxss";
+/******/ 				var href = "" + ({"pages/index/canvasEdit":"pages/index/canvasEdit","pages/index/fontEdit":"pages/index/fontEdit","pages/index/generateImg":"pages/index/generateImg","pages/index/imgEdit":"pages/index/imgEdit","pages/index/info":"pages/index/info","pages/index/zxColor":"pages/index/zxColor"}[chunkId]||chunkId) + ".wxss";
 /******/ 				var fullhref = __webpack_require__.p + href;
 /******/ 				var existingLinkTags = document.getElementsByTagName("link");
 /******/ 				for(var i = 0; i < existingLinkTags.length; i++) {

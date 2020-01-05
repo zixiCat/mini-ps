@@ -1,8 +1,11 @@
 {
-  "navigationBarTitleText": "手拉手首页",
-  "onReachBottomDistance": 100,
-  "enablePullDownRefresh": true,
+  "navigationBarTitleText": "TensionMaxの迷你PS",
   "usingComponents": {
-    "cart": "/pages/cart/icon-link"
+    "img-edit": "/pages/index/imgEdit",
+    "font-edit": "/pages/index/fontEdit",
+    "canvas-edit": "/pages/index/canvasEdit",
+    "zx-color": "/pages/index/zxColor",
+    "zx-info": "/pages/index/info",
+    "generate-img": "/pages/index/generateImg"
   }
 }

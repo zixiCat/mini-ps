@@ -1,248 +1,35 @@
 {
-	"description": "项目配置文件。",
-	"packOptions": {
-		"ignore": []
-	},
-	"setting": {
-		"urlCheck": true,
-		"es6": false,
-		"postcss": false,
-		"minified": false,
-		"newFeature": true,
-		"coverView": true,
-		"autoAudits": false,
-		"showShadowRootInWxmlPanel": true,
-		"scopeDataCheck": false,
-		"checkInvalidKey": true,
-		"checkSiteMap": false,
-		"uploadWithSourceMap": true,
-		"babelSetting": {
-			"ignore": [],
-			"disablePlugins": [],
-			"outputPath": ""
-		}
-	},
-	"compileType": "miniprogram",
-	"libVersion": "2.9.2",
-	"appid": "wx69b840d08d7ccfb0",
-	"projectname": "WasteNya",
-	"simulatorType": "wechat",
-	"simulatorPluginLibVersion": {},
-	"condition": {
-		"search": {
-			"current": -1,
-			"list": []
-		},
-		"conversation": {
-			"current": -1,
-			"list": []
-		},
-		"game": {
-			"current": -1,
-			"list": []
-		},
-		"miniprogram": {
-			"current": 2,
-			"list": [
-				{
-					"name": "测试",
-					"query": "",
-					"id": 0,
-					"pathName": "pages/index/test"
-				},
-				{
-					"name": "测试2",
-					"query": "",
-					"id": 1,
-					"pathName": "pages/index/test2"
-				},
-				{
-					"name": "首页",
-					"query": "",
-					"id": 2,
-					"pathName": "pages/index/index"
-				},
-				{
-					"name": "自营",
-					"query": "",
-					"id": 3,
-					"pathName": "pages/category/index"
-				},
-				{
-					"name": "商家",
-					"query": "",
-					"id": 4,
-					"pathName": "pages/shops/index"
-				},
-				{
-					"name": "全部评价",
-					"query": "",
-					"id": 5,
-					"pathName": "pages/item/comment"
-				},
-				{
-					"name": "评价详情",
-					"query": "",
-					"id": 6,
-					"pathName": "pages/item/comment-detail"
-				},
-				{
-					"name": "商家详情",
-					"query": "",
-					"id": 7,
-					"pathName": "pages/shops/detail"
-				},
-				{
-					"name": "圈子",
-					"query": "",
-					"id": 8,
-					"pathName": "pages/community/index"
-				},
-				{
-					"name": "圈子内容",
-					"query": "",
-					"id": 9,
-					"pathName": "pages/community/detail"
-				},
-				{
-					"name": "我的",
-					"query": "",
-					"id": 10,
-					"pathName": "pages/user/index"
-				},
-				{
-					"name": "商品列表",
-					"query": "",
-					"id": 11,
-					"pathName": "pages/item/list"
-				},
-				{
-					"name": "商品介绍",
-					"query": "",
-					"id": 12,
-					"pathName": "pages/item/index"
-				},
-				{
-					"name": "搜索",
-					"query": "",
-					"id": 13,
-					"pathName": "pages/search/index"
-				},
-				{
-					"name": "搜索结果",
-					"query": "",
-					"id": 14,
-					"pathName": "pages/search/result"
-				},
-				{
-					"name": "购物车",
-					"query": "",
-					"id": 15,
-					"pathName": "pages/cart/index"
-				},
-				{
-					"name": "新增/编辑地址",
-					"query": "",
-					"id": 16,
-					"pathName": "pages/form/address/index"
-				},
-				{
-					"name": "选择收货地址",
-					"query": "",
-					"id": 17,
-					"pathName": "pages/list/address/index"
-				},
-				{
-					"name": "商家入驻",
-					"query": "",
-					"id": 18,
-					"pathName": "pages/form/shops/sign-in"
-				},
-				{
-					"name": "积分商城",
-					"query": "",
-					"id": 19,
-					"pathName": "pages/credit/index"
-				},
-				{
-					"name": "我的积分",
-					"query": "",
-					"id": 20,
-					"pathName": "pages/credit/user"
-				},
-				{
-					"name": "积分明细",
-					"query": "",
-					"id": 21,
-					"pathName": "pages/list/credit/detail"
-				},
-				{
-					"name": "积分明细",
-					"query": "",
-					"id": 22,
-					"pathName": "pages/list/credit/log"
-				},
-				{
-					"name": "确认订单",
-					"query": "",
-					"id": 23,
-					"pathName": "pages/cart/order-confirm"
-				},
-				{
-					"name": "支付完成",
-					"query": "",
-					"id": 24,
-					"pathName": "pages/cart/pay-success"
-				},
-				{
-					"name": "我的订单",
-					"query": "",
-					"id": 25,
-					"pathName": "pages/list/order/index"
-				},
-				{
-					"name": "评价中心",
-					"query": "",
-					"id": 26,
-					"pathName": "pages/list/order/comment"
-				},
-				{
-					"name": "售后",
-					"query": "",
-					"id": 27,
-					"pathName": "pages/list/order/service"
-				},
-				{
-					"name": "宝贝收藏",
-					"query": "",
-					"id": 28,
-					"pathName": "pages/list/user/favorite"
-				},
-				{
-					"name": "关注店铺",
-					"query": "",
-					"id": 29,
-					"pathName": "pages/list/user/subcribe"
-				},
-				{
-					"name": "我的足迹",
-					"query": "",
-					"id": 30,
-					"pathName": "pages/list/user/history"
-				},
-				{
-					"name": "用户设置",
-					"query": "",
-					"id": 31,
-					"pathName": "pages/form/user/index"
-				},
-				{
-					"name": "富文本",
-					"query": "",
-					"id": 32,
-					"pathName": "pages/content/rich-text/index"
-				}
-			]
-		}
-	}
+  "description": "项目配置文件。",
+  "packOptions": {
+    "ignore": []
+  },
+  "setting": {
+    "urlCheck": true,
+    "es6": true,
+    "postcss": false,
+    "minified": false,
+    "checkSiteMap": false
+  },
+  "compileType": "miniprogram",
+  "libVersion": "2.9.2",
+  "appid": "wx5da37183f70a5fa9",
+  "projectname": "TensionMaxの迷你PS",
+  "condition": {
+    "search": {
+      "current": -1,
+      "list": []
+    },
+    "conversation": {
+      "current": -1,
+      "list": []
+    },
+    "game": {
+      "current": -1,
+      "list": []
+    },
+    "miniprogram": {
+      "current": -1,
+      "list": []
+    }
+  }
 }
