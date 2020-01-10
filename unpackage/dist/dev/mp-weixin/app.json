@@ -9,10 +9,6 @@
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
   },
-  "permission": {
-    "scope.userLocation": {
-      "desc": "位置信息将用于为您推荐附近商家"
-    }
-  },
+  "permission": {},
   "usingComponents": {}
 }

@@ -31,11 +31,11 @@ https://www.dogedoge.com/results?q=font+weight<br />
 | maxLineNum | Number |  | text-最大行数,超过行数的文字以“ ... ”表示，0为不限制 |
 ```js
 <template>
-<zx-poster :img="imageList" :text="textList" :canvasW="750" :canvasH="1000"></zx-poster>
+<zx-poster ref="poster" :img="imageList" :text="textList" :canvasW="750" :canvasH="1000"></zx-poster>
 </template>
 
 <script>
-import zxPoster from './zx-poster.vue'
+import zxPoster from '@/components/zx-poster.vue'
 export default {
 components: {
     zxPoster
@@ -69,6 +69,9 @@ data() {
             }
         ]
     }
+},
+onReady() {
+	this.$refs.poster.generate()
 }
 }
 </script>
@@ -84,7 +87,7 @@ data() {
 </template>
 
 <script>
-	import zxSign from './zx-sign.vue'
+	import zxSign from '@/components/zx-sign.vue'
 	export default {
 		components: {
 			zxSign
@@ -108,7 +111,7 @@ data() {
 </template>
 
 <script>
-	import zxImage from './zx-image.vue'
+	import zxImage from '@/components/zx-image.vue'
 	export default {
 		components: {
 			zxImage

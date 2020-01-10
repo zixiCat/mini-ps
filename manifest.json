@@ -65,6 +65,9 @@
             "checkSiteMap" : false
         },
         "usingComponents" : true,
+        "permission" : {
+
+        }
     },
     "mp-alipay" : {
         "usingComponents" : true
