@@ -166,7 +166,6 @@ __webpack_require__.r(__webpack_exports__);
       this.ctx.setFillStyle('#FFFFFF');
       (_this$ctx = this.ctx).fillRect.apply(_this$ctx, [0, 0].concat(_toConsumableArray(this.rpx2px(this.canvasW, this.canvasH))));var _iteratorNormalCompletion3 = true;var _didIteratorError3 = false;var _iteratorError3 = undefined;try {
         for (var _iterator3 = this.img[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {var _this$ctx6;var i = _step3.value;
-          this.ctx.beginPath();
           this.ctx.save();
           if (i.mirror) {var _this$ctx2, _this$ctx3;
             (_this$ctx2 = this.ctx).translate.apply(_this$ctx2, _toConsumableArray(this.rpx2px(i.x + i.w / 2, i.y + i.h / 2)));
@@ -178,7 +177,6 @@ __webpack_require__.r(__webpack_exports__);
             this.ctx.rotate(i.degrees * Math.PI / 180);
             (_this$ctx5 = this.ctx).translate.apply(_this$ctx5, _toConsumableArray(this.rpx2px(-i.x - i.w / 2, -i.y - i.h / 2)));
           }
-
           this.radiusRect.apply(this, _toConsumableArray(this.rpx2px(i.x, i.y, i.w, i.h, i.r))); //（圆角）矩形路径绘制
           this.ctx.clip();
           (_this$ctx6 = this.ctx).drawImage.apply(_this$ctx6, [i.src].concat(_toConsumableArray(this.rpx2px(i.x, i.y, i.w, i.h))));
@@ -193,36 +191,42 @@ __webpack_require__.r(__webpack_exports__);
           drawIndex = 0; //当前绘制内容索引
           _i.w = this.rpx2px(_i.w);
 
-          this.ctx.font = "".concat(_i.weight, " ").concat(this.rpx2px(_i.size), "px/").concat(this.rpx2px(_i.lineHeight), "px sans-serif");
+          this.ctx.font = "normal ".concat(_i.weight, " ").concat(this.rpx2px(_i.size), "px/").concat(this.rpx2px(_i.lineHeight), "px sans-serif");
           this.ctx.setFillStyle(_i.color);
           this.ctx.setTextBaseline('top');
           if (this.ctx.measureText(_i.content).width <= _i.w) {var _this$ctx7; //只有一行内容
             (_this$ctx7 = this.ctx).fillText.apply(_this$ctx7, [_i.content].concat(_toConsumableArray(this.rpx2px(_i.x, _i.y))));
-            if (_i.lineThrough) {var _this$ctx8, _this$ctx9; //情景：存在贯穿线
-              this.ctx.beginPath();
-              (_this$ctx8 = this.ctx).moveTo.apply(_this$ctx8, _toConsumableArray(this.rpx2px(_i.x, _i.y + _i.size / 2 - 3)));
-              (_this$ctx9 = this.ctx).lineTo.apply(_this$ctx9, _toConsumableArray(this.rpx2px(_i.x + this.px2rpx(this.ctx.measureText(_i.content).width), _i.y + _i.size / 2 - 3)));
-              this.ctx.setStrokeStyle(_i.color);
-              this.ctx.setLineWidth(1.6);
-              this.ctx.stroke();
+            if (_i.lineThrough) {//情景：存在贯穿线
+              this.drawLineThrough(_i.x, _i.y, _i.content, _i.color, _i.size);
             }
           } else {
             for (var j = 0; j < _i.content.length; j++) {
               drawTxt += _i.content[j];
               if (this.ctx.measureText(drawTxt).width >= _i.w) {
-                if (drawLineNum === _i.maxLineNum) {var _this$ctx10; //情景：多行时最后一行内容超过边界
-                  (_this$ctx10 = this.ctx).fillText.apply(_this$ctx10, [_i.content.substring(drawIndex, j - 1) + '...'].concat(_toConsumableArray(this.rpx2px(_i.x, _i.y + _i.lineHeight *
-                  drawLineNum))));
+                if (drawLineNum + 1 === _i.maxLineNum) {var _this$ctx8; //多行时最后一行内容超过边界
+                  (_this$ctx8 = this.ctx).fillText.apply(_this$ctx8, [_i.content.substring(drawIndex, j - 1) + '...'].concat(_toConsumableArray(this.rpx2px(_i.x, _i.y + _i.lineHeight *
+                  drawLineNum)), [_i.color, _i.size]));
+                  if (_i.lineThrough) {
+                    this.drawLineThrough(_i.x, _i.y + _i.lineHeight * drawLineNum, _i.content.substring(drawIndex, j - 1), _i.color, _i.
+                    size);
+                  }
                   break;
-                } else {var _this$ctx11; //情景：多行时最后一行之前的内容
-                  (_this$ctx11 = this.ctx).fillText.apply(_this$ctx11, [_i.content.substring(drawIndex, j + 1)].concat(_toConsumableArray(this.rpx2px(_i.x, _i.y + _i.lineHeight * drawLineNum))));
+                } else {var _this$ctx9; //多行时最后一行内容之前的内容
+                  (_this$ctx9 = this.ctx).fillText.apply(_this$ctx9, [_i.content.substring(drawIndex, j + 1)].concat(_toConsumableArray(this.rpx2px(_i.x, _i.y + _i.lineHeight * drawLineNum))));
+                  if (_i.lineThrough) {
+                    this.drawLineThrough(_i.x, _i.y + _i.lineHeight * drawLineNum, _i.content.substring(drawIndex, j + 1), _i.color, _i.
+                    size);
+                  }
                   drawIndex = j + 1;
                   drawLineNum += 1;
                   drawTxt = '';
                 }
               } else {
-                if (j === _i.content.length - 1) {var _this$ctx12; //情景：多行时最后一行内容未超过边界
-                  (_this$ctx12 = this.ctx).fillText.apply(_this$ctx12, [drawTxt].concat(_toConsumableArray(this.rpx2px(_i.x, _i.y + _i.lineHeight * drawLineNum))));
+                if (j === _i.content.length - 1) {var _this$ctx10; //情景：多行时最后一行内容未超过边界
+                  (_this$ctx10 = this.ctx).fillText.apply(_this$ctx10, [drawTxt].concat(_toConsumableArray(this.rpx2px(_i.x, _i.y + _i.lineHeight * drawLineNum))));
+                  if (_i.lineThrough) {
+                    this.drawLineThrough(_i.x, _i.y + _i.lineHeight * drawLineNum, drawTxt, _i.color, _i.size);
+                  }
                 }
               }
             }
@@ -252,6 +256,14 @@ __webpack_require__.r(__webpack_exports__);
       this.ctx.lineTo(x, y + h);
       this.ctx.arcTo(x, y, x + r, y, r); // 画左上角的弧
       this.ctx.lineTo(x, y);
+    },
+    drawLineThrough: function drawLineThrough(x, y, content, color, size) {var _this$ctx11, _this$ctx12;
+      this.ctx.beginPath();
+      (_this$ctx11 = this.ctx).moveTo.apply(_this$ctx11, _toConsumableArray(this.rpx2px(x, y + size / 2)));
+      (_this$ctx12 = this.ctx).lineTo.apply(_this$ctx12, _toConsumableArray(this.rpx2px(x + this.px2rpx(this.ctx.measureText(content).width), y + size / 2)));
+      this.ctx.setStrokeStyle(color);
+      this.ctx.setLineWidth(1.6);
+      this.ctx.stroke();
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

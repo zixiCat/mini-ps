@@ -41,7 +41,7 @@
     position: absolute;
     margin: auto;
     width: 600rpx;
-    height: 1100rpx;
+    height: 1150rpx;
     bottom: 0;
     top: 0;
     left: 0;
@@ -67,14 +67,14 @@
 }
 .zx-info .zx-dialog .zx-btn {
       display: inline-block;
-      font-size: 30rpx;
-      height: 50rpx;
+      height: 38rpx;
       width: 50rpx;
-      margin: 13rpx;
-      color: #555555;
+      font-size: 38rpx;
+      line-height: 38rpx;
       text-align: center;
-      line-height: 50rpx;
+      color: #304156;
       padding: 0;
+      margin: 0 10rpx;
 }
 /* 动画效果 animation effect */
 .show {

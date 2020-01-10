@@ -50,7 +50,6 @@
 				this.ctx.setFillStyle('#FFFFFF')
 				this.ctx.fillRect(0, 0, ...this.rpx2px(this.canvasW, this.canvasH))
 				for (let i of this.img) {
-					this.ctx.beginPath()
 					this.ctx.save()
 					if (i.mirror) {
 						this.ctx.translate(...this.rpx2px(i.x + i.w / 2, i.y + i.h / 2))
@@ -62,7 +61,6 @@
 						this.ctx.rotate(i.degrees * Math.PI / 180)
 						this.ctx.translate(...this.rpx2px(-i.x - i.w / 2, -i.y - i.h / 2))
 					}
-		
 					this.radiusRect(...this.rpx2px(i.x, i.y, i.w, i.h, i.r)) //（圆角）矩形路径绘制
 					this.ctx.clip()
 					this.ctx.drawImage(i.src, ...this.rpx2px(i.x, i.y, i.w, i.h))
@@ -77,29 +75,32 @@
 						drawIndex = 0 //当前绘制内容索引
 					i.w = this.rpx2px(i.w)
 
-					this.ctx.font = `${i.weight} ${this.rpx2px(i.size)}px/${this.rpx2px(i.lineHeight)}px sans-serif`
+					this.ctx.font = `normal ${i.weight} ${this.rpx2px(i.size)}px/${this.rpx2px(i.lineHeight)}px sans-serif`
 					this.ctx.setFillStyle(i.color)
 					this.ctx.setTextBaseline('top')
 					if (this.ctx.measureText(i.content).width <= i.w) { //只有一行内容
 						this.ctx.fillText(i.content, ...this.rpx2px(i.x, i.y))
 						if (i.lineThrough) { //情景：存在贯穿线
-							this.ctx.beginPath();
-							this.ctx.moveTo(...this.rpx2px(i.x, i.y + i.size / 2 - 3))
-							this.ctx.lineTo(...this.rpx2px(i.x + this.px2rpx(this.ctx.measureText(i.content).width), i.y + i.size / 2 - 3))
-							this.ctx.setStrokeStyle(i.color)
-							this.ctx.setLineWidth(1.6)
-							this.ctx.stroke()
+							this.drawLineThrough(i.x, i.y, i.content, i.color, i.size)
 						}
 					} else {
 						for (let j = 0; j < i.content.length; j++) {
 							drawTxt += i.content[j]
 							if (this.ctx.measureText(drawTxt).width >= i.w) {
-								if (drawLineNum === i.maxLineNum) { //情景：多行时最后一行内容超过边界
+								if (drawLineNum + 1 === i.maxLineNum) { //多行时最后一行内容超过边界
 									this.ctx.fillText(i.content.substring(drawIndex, j - 1) + '...', ...this.rpx2px(i.x, i.y + i.lineHeight *
-										drawLineNum));
+											drawLineNum), i.color, i.size);
+									if (i.lineThrough) {
+										this.drawLineThrough(i.x, i.y + i.lineHeight * drawLineNum, i.content.substring(drawIndex, j - 1), i.color, i
+												.size)
+									}
 									break;
-								} else { //情景：多行时最后一行之前的内容
+								} else { //多行时最后一行内容之前的内容
 									this.ctx.fillText(i.content.substring(drawIndex, j + 1), ...this.rpx2px(i.x, i.y + i.lineHeight * drawLineNum));
+									if (i.lineThrough) {
+										this.drawLineThrough(i.x, i.y + i.lineHeight * drawLineNum, i.content.substring(drawIndex, j + 1), i.color, i
+												.size)
+									}
 									drawIndex = j + 1;
 									drawLineNum += 1;
 									drawTxt = ''
@@ -107,6 +108,9 @@
 							} else {
 								if (j === i.content.length - 1) { //情景：多行时最后一行内容未超过边界
 									this.ctx.fillText(drawTxt, ...this.rpx2px(i.x, i.y + i.lineHeight * drawLineNum));
+									if (i.lineThrough) {
+										this.drawLineThrough(i.x, i.y + i.lineHeight * drawLineNum, drawTxt, i.color, i.size)
+									}
 								}
 							}
 						}
@@ -136,6 +140,14 @@
 				this.ctx.lineTo(x, y + h)
 				this.ctx.arcTo(x, y, x + r, y, r); // 画左上角的弧
 				this.ctx.lineTo(x, y)
+			},
+			drawLineThrough(x, y, content, color, size) {
+				this.ctx.beginPath();
+				this.ctx.moveTo(...this.rpx2px(x, y + size / 2))
+				this.ctx.lineTo(...this.rpx2px(x + this.px2rpx(this.ctx.measureText(content).width), y + size / 2))
+				this.ctx.setStrokeStyle(color)
+				this.ctx.setLineWidth(1.6)
+				this.ctx.stroke()
 			}
 		}
 	};

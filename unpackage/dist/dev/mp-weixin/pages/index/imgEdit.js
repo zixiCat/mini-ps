@@ -157,7 +157,6 @@ var _default =
       }
       this.determineDirection(e, item, index);
     },
-    //删除对象 delete item but I have no one QAQ
     longPress: function longPress(e, item, index) {
       this.x0 = e.touches[0].clientX - item.position.x;
       this.y0 = e.touches[0].clientY - item.position.y;

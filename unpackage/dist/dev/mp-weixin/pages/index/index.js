@@ -421,7 +421,7 @@ __webpack_require__.r(__webpack_exports__);
         } else {
           uni.showModal({
             title: '提示',
-            content: '请点击调控板左下角插入文字',
+            content: '请点击调控板下放插入文字',
             showCancel: false });
 
         }
@@ -494,7 +494,7 @@ __webpack_require__.r(__webpack_exports__);
     tapTopBtn1: function tapTopBtn1() {var _this2 = this;
       uni.showModal({
         title: '提示',
-        content: '是否清空绘画板',
+        content: '是否清空画板',
         success: function success(res) {
           if (res.confirm) {
             _this2.textList = [];
@@ -548,7 +548,7 @@ __webpack_require__.r(__webpack_exports__);
           this.$refs.font.handleFontSize(this.fontConfig.size);
           break;
         case 'canvas':
-          if (this.canvasConfig.lineWidth + num < 0 || this.canvasConfig.lineWidth + num > 5) return;
+          if (this.canvasConfig.lineWidth + num < 1 || this.canvasConfig.lineWidth + num > 5) return;
           this.canvasConfig.lineWidth = this.canvasConfig.lineWidth * 1 + num;
           break;
         default:
@@ -575,6 +575,10 @@ __webpack_require__.r(__webpack_exports__);
           }, 30);
           break;
         case 'canvas':
+          this.timer = setInterval(function () {
+            if (_this3.canvasConfig.lineWidth + num < 1 || _this3.canvasConfig.lineWidth + num > 5) return;
+            _this3.canvasConfig.lineWidth = _this3.canvasConfig.lineWidth * 1 + num;
+          }, 30);
           break;
         default:
           break;}
@@ -623,6 +627,10 @@ __webpack_require__.r(__webpack_exports__);
 
           break;
         case 'canvas':
+          this.timer = setInterval(function () {
+            if (_this4.canvasConfig.keenness + num < 0 || _this4.canvasConfig.keenness + num > 5) return;
+            _this4.canvasConfig.keenness = _this4.canvasConfig.keenness * 1 + num;
+          }, 30);
           break;
         default:
           break;}
@@ -745,9 +753,9 @@ __webpack_require__.r(__webpack_exports__);
           var _j = this.px2rpx(_i.position.x, _i.position.y, _i.position.w, _i.config.lineHeight, _i.config.size);
           data2.push({
             content: _i.content,
-            x: _j[0],
-            y: _j[1],
-            w: _j[2] - 60, //元素padding为30rpx padding of the element is 30rpx
+            x: _j[0] + 30, //元素padding为30rpx padding of the element is 30rpx
+            y: _j[1] + (_j[3] + _j[4]) / 2, //元素padding为30rpx，并存在line-height padding of the element is 30rpx, and there is line-height
+            w: _j[2] - 60 - _j[4] / 3, //元素padding为30rpx padding of the element is 30rpx
             lineHeight: _j[3],
             size: _j[4],
             color: _i.config.color,

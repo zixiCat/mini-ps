@@ -3,7 +3,7 @@
 		<view class="zx-dialog">
 			<view class="zx-content">
 				<view class="zx-title">文本/图片模式</view>
-				<view> 1、滑动目标中心则移动</view>
+				<view> 1、滑动目标中心即移动</view>
 				<view> 2、滑动目标内存边缘即调整宽高 </view>
 				<view style="display: flex;">
 					<image src="https://s2.ax1x.com/2020/01/01/l8a92j.png" class="zx-img" mode="aspectFit"></image>
@@ -21,6 +21,8 @@
 				<view class="zx-title" style="margin-top: 20rpx;">导出</view>
 				<view>1、导出的图片为PNG格式</view>
 				<view>2、导出后长按即可保存/分享/收藏</view>
+				<view style="margin-top: 30rpx;color: #999999;">拖动画板底部的 <text style="letter-spacing: -3rpx;color: #304156;padding: 5rpx;"> === </text> 可调整其高度</view>
+				<view style="color: #999999;display: flex;">调整范围的按钮<button class="zx-btn">-</button><button class="zx-btn">+</button>支持长按</view>
 				<view style="margin-top: 30rpx;color: #999999;">更多功能/彩蛋等你发现</view>
 				<view style="color: #999999;">点击TensionMax再次弹出</view>
 			</view>
@@ -61,6 +63,7 @@
 		margin: auto;
 		bottom: 0;
 		top: 0;
+		// font-weight: bold;
 		left: 0;
 		right: 0;
 		background-color: rgba(0, 0, 0, .5);
@@ -71,7 +74,7 @@
 			position: absolute;
 			margin: auto;
 			width: 600rpx;
-			height: 1100rpx;
+			height: 1150rpx;
 			bottom: 0;
 			top: 0;
 			left: 0;
@@ -98,14 +101,14 @@
 
 			.zx-btn {
 				display: inline-block;
-				font-size: 30rpx;
-				height: 50rpx;
+				height: 38rpx;
 				width: 50rpx;
-				margin: 13rpx;
-				color: #555555;
+				font-size: 38rpx;
+				line-height: 38rpx;
 				text-align: center;
-				line-height: 50rpx;
+				color: #304156;
 				padding: 0;
+				margin: 0 10rpx;
 			}
 		}
 

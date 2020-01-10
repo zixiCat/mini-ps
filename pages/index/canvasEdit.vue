@@ -49,7 +49,6 @@
 			},
 			touchStart(e) {
 				this.handleCanvasColor(this.value.color)
-				this.ctx.beginPath()
 				this.lineWidth = this.value.lineWidth
 				this.k = this.value.lineWidth > 3 ? 0.3 : 0.2
 				this.t0 = new Date().getTime()

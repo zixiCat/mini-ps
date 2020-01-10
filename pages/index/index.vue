@@ -21,9 +21,9 @@
 					</view>
 					<view v-if="editType!=='i'" class="zx-huang" :style="{color: curColor}" @tap="info">TensionMax</view>
 					<view>
-						<button v-if="editType!=='canvas'" class="zx-btn" style="width: 80rpx;"  @tap="export2png">导出</button>
+						<button v-if="editType!=='canvas'" class="zx-btn" style="width: 80rpx;" @tap="export2png">导出</button>
 						<button v-if="editType==='img'" class="zx-btn" :class="imgConfig.mirror&&editType==='img'?'zx-select':''" @tap="tapTopBtn4">镜</button>
-						<button  class="zx-btn" @tap="tapTopBtn1">清</button>
+						<button class="zx-btn" @tap="tapTopBtn1">清</button>
 						<button v-if="editType!=='canvas'" class="zx-btn" @tap="tapTopBtn2">删</button>
 						<!-- <button v-if="editType==='img'" class="zx-btn" :class="imgConfig.shadow&&editType==='img'?'zx-select':''" @tap="tapTopBtn3">影</button> -->
 						<button class="zx-btn" @tap="close">X</button>
@@ -268,7 +268,7 @@
 					} else {
 						uni.showModal({
 							title: '提示',
-							content: '请点击调控板左下角插入文字',
+							content: '请点击调控板下放插入文字',
 							showCancel: false,
 						});
 					}
@@ -341,8 +341,8 @@
 			tapTopBtn1() {
 				uni.showModal({
 					title: '提示',
-					content: '是否清空绘画板',
-					success: res=> {
+					content: '是否清空画板',
+					success: res => {
 						if (res.confirm) {
 							this.textList = []
 							this.imageList = []
@@ -395,7 +395,7 @@
 						this.$refs.font.handleFontSize(this.fontConfig.size)
 						break;
 					case 'canvas':
-						if (this.canvasConfig.lineWidth + num < 0 || this.canvasConfig.lineWidth + num > 5) return
+						if (this.canvasConfig.lineWidth + num < 1 || this.canvasConfig.lineWidth + num > 5) return
 						this.canvasConfig.lineWidth = this.canvasConfig.lineWidth * 1 + num
 						break;
 					default:
@@ -422,6 +422,10 @@
 						}, 30)
 						break;
 					case 'canvas':
+					this.timer = setInterval(() => {
+					if (this.canvasConfig.lineWidth + num < 1 || this.canvasConfig.lineWidth + num > 5) return
+					this.canvasConfig.lineWidth = this.canvasConfig.lineWidth * 1 + num
+					}, 30)
 						break;
 					default:
 						break;
@@ -470,6 +474,10 @@
 
 						break;
 					case 'canvas':
+						this.timer = setInterval(() => {
+							if (this.canvasConfig.keenness + num < 0 || this.canvasConfig.keenness + num > 5) return
+							this.canvasConfig.keenness = this.canvasConfig.keenness * 1 + num
+						}, 30)
 						break;
 					default:
 						break;
@@ -569,8 +577,8 @@
 			//导出PNG export to png
 			export2png() {
 				uni.showLoading({
-					mask:true,
-				    title: '正在导出'
+					mask: true,
+					title: '正在导出'
 				});
 				let data = []
 				for (let i of this.imageList) {
@@ -592,9 +600,9 @@
 					let j = this.px2rpx(i.position.x, i.position.y, i.position.w, i.config.lineHeight, i.config.size)
 					data2.push({
 						content: i.content,
-						x: j[0],
-						y: j[1],
-						w: j[2] - 60, //元素padding为30rpx padding of the element is 30rpx
+						x: j[0] + 30, //元素padding为30rpx padding of the element is 30rpx
+						y: j[1] + (j[3] + j[4]) / 2, //元素padding为30rpx，并存在line-height padding of the element is 30rpx, and there is line-height
+						w: j[2] - 60-j[4]/3, //元素padding为30rpx padding of the element is 30rpx
 						lineHeight: j[3],
 						size: j[4],
 						color: i.config.color,
