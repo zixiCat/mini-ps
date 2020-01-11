@@ -6,8 +6,8 @@
 
 
 **思路讲解/效果展示**<br />
->https://segmentfault.com/write?draftId=1220000021495001<br />
-https://www.dogedoge.com/results?q=font+weight<br />
+>https://segmentfault.com/a/1190000021554981<br />
+https://www.cnblogs.com/TensionMax/p/12179726.html<br />
 
 ## 开放式海报
 | 属性 | 类型 | 默认 | 说明 |
