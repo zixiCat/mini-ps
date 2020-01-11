@@ -3,7 +3,9 @@
 ### 个人制作，基于uni-app框架搭建的可实现图文多方位编辑并生成海报的一款轻巧小程序。集成的开放式海报，油墨电子签名，图片拖拽模块可单独食用
 
 ***
-**思路讲解**<br />
+
+
+**思路讲解/效果展示**<br />
 >https://segmentfault.com/write?draftId=1220000021495001<br />
 https://www.dogedoge.com/results?q=font+weight<br />
 
