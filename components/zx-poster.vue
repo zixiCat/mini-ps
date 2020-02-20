@@ -71,6 +71,7 @@
 						this.ctx.rotate(i.degrees * Math.PI / 180)
 						this.ctx.translate(...this.rpx2px(-i.x - i.w / 2, -i.y - i.h / 2))
 					}
+					i.r = i.r || 0 //小程序真机bug
 					this.radiusRect(...this.rpx2px(i.x, i.y, i.w, i.h, i.r)) //圆角或矩形路径绘制
 					this.ctx.clip() //裁剪
 					this.ctx.drawImage(i.src, ...this.rpx2px(i.x, i.y, i.w, i.h))
