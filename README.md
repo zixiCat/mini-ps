@@ -5,7 +5,7 @@
 
 ***
 
-[![rgRtWq.jpg](https://s3.ax1x.com/2020/12/24/rgRtWq.jpg)](https://s3.ax1x.com/2020/12/24/rgRtWq.jpg)
+![qrcode](./qrcode.jpg)
 
 
 **思路讲解/效果展示**<br />
